@@ -1,0 +1,1686 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MOOVED 电气光伏知识库</title>
+<style>
+:root {
+  --bg: #f4f6f9; --card-bg: #ffffff;
+  --primary: #1a3a5c; --accent: #2196F3; --accent-light: #e3f2fd;
+  --text: #263238; --text-secondary: #546e7a; --border: #e0e6ed;
+  --zebra-odd: #fafbfc; --zebra-even: #ffffff; --hover-bg: #e3f2fd;
+  --header-bg: linear-gradient(135deg, #0d253f 0%, #1a3a5c 50%, #1565c0 100%);
+  --shadow: 0 2px 12px rgba(0,0,0,0.06); --shadow-hover: 0 4px 20px rgba(0,0,0,0.10);
+  --green: #4caf50; --orange: #ff9800; --tag-bg: #e8eaf6;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", "Helvetica Neue", sans-serif;
+  background: var(--bg); color: var(--text); line-height: 1.7; -webkit-font-smoothing: antialiased;
+}
+
+/* ===== 语言切换 ===== */
+body.lang-both [data-lang-zh], body.lang-both [data-lang-en] { display:inline; }
+body.lang-both .cn-col { display:table-cell; } body.lang-both .en-col { display:table-cell; }
+body.lang-zh [data-lang-en] { display:none; } body.lang-zh .cn-col { display:table-cell; } body.lang-zh .en-col { display:none; } body.lang-zh .section-title .en-title { display:none; }
+body.lang-en [data-lang-zh] { display:none; } body.lang-en .cn-col { display:none; } body.lang-en .en-col { display:table-cell; }
+body.lang-en .section-title .en-title { display:block; font-size:1.15rem; font-weight:700; color:var(--primary); font-style:normal; }
+body.lang-en .section-title [data-lang-zh] { display:none; }
+
+/* ===== Hero ===== */
+.hero { background: var(--header-bg); color:#fff; padding: 36px 24px 20px; position:relative; overflow:hidden; }
+.hero::after { content:''; position:absolute; bottom:0; left:0; right:0; height:60px; background:linear-gradient(to top, var(--bg), transparent); }
+.hero-inner { max-width:1100px; margin:0 auto; display:flex; align-items:center; gap:24px; }
+.hero-left { display:flex; align-items:center; gap:20px; flex:1; }
+.logo-placeholder { width:64px; height:64px; background:#fff; border-radius:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0; overflow:hidden; }
+.logo-placeholder img { width:100%; height:100%; object-fit:contain; border-radius:10px; }
+.hero-text { flex:1; }
+.hero h1 { font-size:1.8rem; font-weight:700; letter-spacing:1px; margin-bottom:6px; }
+.hero .subtitle { font-size:0.9rem; opacity:0.8; }
+.lang-switch { display:flex; gap:0; background:rgba(255,255,255,0.12); border-radius:8px; overflow:hidden; flex-shrink:0; }
+.lang-btn { padding:6px 14px; font-size:0.8rem; border:none; background:transparent; color:rgba(255,255,255,0.7); cursor:pointer; transition:all 0.25s; font-weight:500; white-space:nowrap; }
+.lang-btn:hover { color:#fff; background:rgba(255,255,255,0.08); }
+.lang-btn.active { background:rgba(255,255,255,0.22); color:#fff; font-weight:700; }
+
+/* ===== Tab 导航 ===== */
+.tab-nav { display:flex; gap:0; max-width:1100px; margin: -20px auto 0; padding:0 24px; position:relative; z-index:10; }
+.tab-btn { padding:12px 32px; font-size:0.95rem; border:none; cursor:pointer; font-weight:600; border-radius:12px 12px 0 0; transition:all 0.25s; color:var(--text-secondary); background:rgba(255,255,255,0.5); }
+.tab-btn:hover { color:var(--primary); background:rgba(255,255,255,0.8); }
+.tab-btn.active { background:var(--card-bg); color:var(--primary); box-shadow:0 -2px 12px rgba(0,0,0,0.04); }
+.tab-btn .tab-icon { margin-right:6px; font-size:1rem; }
+
+.container { max-width:1100px; margin:0 auto; padding:0 20px 60px; }
+
+/* ===== 搜索框（术语Tab） ===== */
+.search-bar { background:var(--card-bg); border-radius:0 12px 12px 12px; box-shadow:var(--shadow); padding:20px 28px; margin:0 auto 28px; position:relative; z-index:5; max-width:1100px; display:flex; align-items:center; gap:12px; }
+.search-input-wrap { flex:1; position:relative; }
+.search-icon { position:absolute; left:14px; top:50%; transform:translateY(-50%); color:#90a4ae; font-size:1rem; pointer-events:none; z-index:2; }
+.search-input { width:100%; padding:10px 40px 10px 40px; border:2px solid var(--border); border-radius:8px; font-size:0.95rem; outline:none; transition:border-color 0.2s, box-shadow 0.2s; background:var(--bg); color:var(--text); }
+.search-input:focus { border-color:var(--accent); box-shadow:0 0 0 3px rgba(33,150,243,0.12); }
+.search-input::placeholder { color:#b0bec5; }
+.search-clear { position:absolute; right:10px; top:50%; transform:translateY(-50%); width:28px; height:28px; border:none; background:#cfd8dc; color:#fff; border-radius:50%; cursor:pointer; font-size:0.85rem; line-height:28px; text-align:center; display:none; transition:background 0.2s; z-index:2; }
+.search-clear:hover { background:var(--accent); }
+.search-clear.visible { display:block; }
+.search-count { font-size:0.85rem; color:var(--text-secondary); white-space:nowrap; font-weight:500; }
+.search-count.no-match { color:#e53935; }
+.suggestions { position:absolute; top:100%; left:0; right:0; margin-top:4px; background:var(--card-bg); border:1px solid var(--border); border-radius:8px; box-shadow:0 8px 30px rgba(0,0,0,0.12); max-height:280px; overflow-y:auto; display:none; z-index:100; }
+.suggestions.visible { display:block; }
+.suggestions .sug-item { padding:10px 14px; cursor:pointer; display:flex; align-items:center; gap:10px; font-size:0.88rem; transition:background 0.15s; border-bottom:1px solid #f0f3f6; }
+.suggestions .sug-item:last-child { border-bottom:none; }
+.suggestions .sug-item:hover,.suggestions .sug-item.active { background:var(--accent-light); color:var(--accent); }
+.sug-abbr { font-weight:700; color:var(--primary); min-width:70px; font-size:0.82rem; }
+.sug-cn { flex:1; }
+.sug-category { font-size:0.72rem; color:#90a4ae; background:#f4f6f9; padding:2px 8px; border-radius:10px; white-space:nowrap; }
+.suggestions .no-sug { padding:16px; text-align:center; color:#90a4ae; font-size:0.85rem; }
+
+/* ===== 添加术语按钮 ===== */
+.btn-add-wrap { flex-shrink:0; }
+.btn-add { display:flex; align-items:center; gap:6px; padding:8px 18px; background:var(--accent); color:#fff; border:none; border-radius:8px; font-size:0.88rem; font-weight:600; cursor:pointer; transition:background 0.2s,transform 0.15s; }
+.btn-add:hover { background:#1976d2; transform:translateY(-1px); }
+.btn-add:active { transform:translateY(0); }
+.btn-add svg { width:18px; height:18px; fill:currentColor; }
+
+/* ===== 目录 ===== */
+.toc { background:var(--card-bg); border-radius:12px; box-shadow:var(--shadow); padding:28px 32px; margin:0 auto 40px; position:relative; z-index:2; max-width:1100px; }
+.toc h2 { font-size:1.1rem; color:var(--primary); margin-bottom:16px; display:flex; align-items:center; gap:8px; }
+.toc h2::before { content:''; display:inline-block; width:4px; height:18px; background:var(--accent); border-radius:2px; }
+.toc-list { display:grid; grid-template-columns:repeat(auto-fill, minmax(260px,1fr)); gap:8px 20px; list-style:none; }
+.toc-list li { counter-increment:toc-counter; }
+.toc-list a { display:block; padding:8px 12px; border-radius:6px; color:var(--text); text-decoration:none; font-size:0.9rem; transition:all 0.2s; border:1px solid transparent; cursor:pointer; }
+.toc-list a:hover { background:var(--accent-light); color:var(--accent); border-color:var(--accent); }
+.toc-list a::before { content:"0" counter(toc-counter); color:var(--accent); font-weight:600; font-size:0.8rem; margin-right:8px; opacity:0.7; }
+
+/* ===== 分类区块 ===== */
+.section { background:var(--card-bg); border-radius:12px; box-shadow:var(--shadow); margin-bottom:32px; overflow:hidden; transition:box-shadow 0.3s; }
+.section:hover { box-shadow:var(--shadow-hover); }
+.section.hidden { display:none; }
+.section-header { background:linear-gradient(135deg, #f8fafd 0%, #eaf0f8 100%); padding:22px 28px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:14px; }
+.section-number { width:44px; height:44px; background:var(--accent); color:#fff; border-radius:10px; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:1.1rem; flex-shrink:0; }
+.section-title { flex:1; }
+.section-title h3 { font-size:1.15rem; color:var(--primary); margin-bottom:2px; }
+.section-title .en-title { font-size:0.8rem; color:var(--text-secondary); font-style:italic; }
+.section-desc { padding:14px 28px; font-size:0.88rem; color:var(--text-secondary); background:#fafbfd; border-bottom:1px solid var(--border); }
+.table-wrapper { overflow-x:auto; -webkit-overflow-scrolling:touch; }
+table { width:100%; border-collapse:collapse; font-size:0.9rem; min-width:700px; }
+thead th { background:var(--primary); color:#fff; font-weight:600; padding:12px 16px; text-align:left; white-space:nowrap; font-size:0.82rem; letter-spacing:0.5px; text-transform:uppercase; }
+tbody td { padding:12px 16px; border-bottom:1px solid var(--border); vertical-align:top; }
+tbody tr:nth-child(odd) { background:var(--zebra-odd); }
+tbody tr:nth-child(even) { background:var(--zebra-even); }
+tbody tr:hover { background:var(--hover-bg); }
+tbody tr:last-child td { border-bottom:none; }
+td.col-abbr { font-weight:700; color:var(--primary); white-space:nowrap; }
+td:nth-child(2) { color:var(--text-secondary); font-size:0.83rem; }
+td.col-desc { font-size:0.85rem; color:#455a64; line-height:1.6; }
+tbody tr.hidden { display:none; }
+tbody tr.highlight { animation:highlightFlash 2s ease-out; background:#fff3e0 !important; box-shadow:inset 4px 0 0 #ff9800; }
+@keyframes highlightFlash { 0%{background:#ffe0b2;} 100%{background:#fff3e0;} }
+
+/* ===== 知识文章模块 ===== */
+.articles-toolbar { background:var(--card-bg); border-radius:0 12px 12px 12px; box-shadow:var(--shadow); padding:16px 24px; margin:0 auto 20px; max-width:1100px; display:flex; align-items:center; gap:12px; }
+.articles-toolbar .search-input-wrap { flex:1; }
+.articles-toolbar .btn-add-wrap { flex-shrink:0; }
+.articles-empty { text-align:center; padding:60px 20px; color:var(--text-secondary); font-size:0.95rem; }
+
+.article-card {
+  background:var(--card-bg); border-radius:14px;
+  box-shadow:0 2px 8px rgba(0,0,0,0.04); margin-bottom:24px;
+  overflow:hidden; transition:box-shadow 0.35s, transform 0.35s;
+  border:1px solid var(--border);
+}
+.article-card:hover {
+  box-shadow:0 6px 24px rgba(0,0,0,0.08);
+  transform:translateY(-2px);
+}
+.article-card-header { padding:20px 24px; border-bottom:1px solid var(--border); display:flex; align-items:flex-start; gap:16px; }
+.article-card-info { flex:1; min-width:0; }
+.article-card-title { font-size:1.05rem; font-weight:700; color:var(--primary); margin-bottom:6px; cursor:pointer; transition:color 0.2s; word-break:break-word; }
+.article-card-title:hover { color:var(--accent); }
+.article-meta { display:flex; flex-wrap:wrap; gap:8px; align-items:center; font-size:0.78rem; color:var(--text-secondary); }
+.article-meta .meta-source { background:#f0f3f6; padding:2px 10px; border-radius:10px; }
+.article-meta .meta-date {  }
+.article-tags { display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
+.article-tag { background:var(--tag-bg); color:#3949ab; padding:2px 10px; border-radius:10px; font-size:0.72rem; font-weight:600; }
+.article-summary { padding:12px 24px; font-size:0.85rem; color:var(--text-secondary); line-height:1.7; border-bottom:1px solid var(--border); }
+.article-actions { display:flex; gap:10px; padding:12px 24px; }
+.article-detail {
+  max-height:0; overflow:hidden; border-top:1px solid transparent;
+  background:#f8fafc; transition:max-height 0.5s ease, border-color 0.3s, padding 0.3s;
+}
+.article-detail.open {
+  max-height:10000px; border-top:1px solid var(--border);
+}
+.article-detail-content {
+  font-size:0.92rem; line-height:2; color:#37474f;
+  padding:24px 28px 20px; background:#fafbfd;
+  border-radius:0 0 12px 12px;
+}
+.article-detail-content h1 {
+  font-size:1.35rem; margin:24px 0 16px; color:var(--primary);
+  font-weight:800; padding-bottom:10px;
+  border-bottom:2px solid var(--accent);
+  letter-spacing:0.5px;
+}
+.article-detail-content h2 {
+  font-size:1.15rem; margin:20px 0 12px; color:var(--primary);
+  font-weight:700; padding-left:14px;
+  border-left:4px solid var(--accent);
+  line-height:1.4;
+}
+.article-detail-content h3 {
+  font-size:1.05rem; margin:16px 0 8px; color:#37474f;
+  font-weight:700;
+}
+.article-detail-content h4 {
+  font-size:0.98rem; margin:12px 0 6px; color:#455a64;
+  font-weight:600;
+}
+.article-detail-content p { margin:10px 0; line-height:1.95; }
+.article-detail-content ul, .article-detail-content ol {
+  margin:10px 0; padding-left:28px; list-style:none;
+}
+.article-detail-content ul li {
+  position:relative; padding-left:4px; margin:6px 0; line-height:1.85;
+}
+.article-detail-content ul li::before {
+  content:''; position:absolute; left:-18px; top:11px;
+  width:6px; height:6px; border-radius:50%;
+  background:var(--accent);
+}
+.article-detail-content ol { counter-reset:article-ol; }
+.article-detail-content ol li {
+  position:relative; padding-left:4px; margin:6px 0; line-height:1.85;
+  counter-increment:article-ol;
+}
+.article-detail-content ol li::before {
+  content:counter(article-ol); position:absolute; left:-22px; top:0;
+  color:var(--accent); font-weight:700; font-size:0.82rem;
+}
+.article-detail-content strong {
+  background:linear-gradient(to top, var(--accent-light) 40%, transparent 40%);
+  color:var(--primary); font-weight:700; padding:0 2px;
+}
+.article-detail-content code {
+  background:#263238; color:#e3f2fd; padding:2px 8px;
+  border-radius:4px; font-size:0.85rem; font-family:'SF Mono','Consolas','Monaco','Courier New',monospace;
+  letter-spacing:0.3px;
+}
+.article-detail-content pre {
+  background:#1e2a34; color:#c8d6e5; padding:18px 22px;
+  border-radius:10px; overflow-x:auto; margin:14px 0;
+  font-size:0.85rem; line-height:1.7;
+  border:1px solid #2c3e50;
+}
+.article-detail-content pre code {
+  background:transparent; color:inherit; padding:0; border-radius:0;
+  font-size:inherit;
+}
+.article-detail-content br { display:block; content:''; margin:4px 0; }
+
+.btn-sm { padding:6px 16px; border-radius:6px; font-size:0.82rem; font-weight:600; cursor:pointer; transition:all 0.2s; }
+.btn-outline { background:transparent; border:1.5px solid var(--accent); color:var(--accent); }
+.btn-outline:hover { background:var(--accent-light); }
+.btn-outline-secondary { background:transparent; border:1.5px solid #90a4ae; color:#546e7a; }
+.btn-outline-secondary:hover { background:#f0f3f6; }
+
+/* ===== 弹窗 ===== */
+.modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:1000; display:flex; align-items:center; justify-content:center; opacity:0; visibility:hidden; transition:opacity 0.3s,visibility 0.3s; }
+.modal-overlay.open { opacity:1; visibility:visible; }
+.modal { background:var(--card-bg); border-radius:16px; box-shadow:0 20px 60px rgba(0,0,0,0.2); width:92%; max-width:760px; max-height:88vh; overflow-y:auto; transform:translateY(20px); transition:transform 0.3s; }
+.modal-overlay.open .modal { transform:translateY(0); }
+.modal-header { padding:20px 24px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; background:var(--card-bg); z-index:2; border-radius:16px 16px 0 0; }
+.modal-header h3 { font-size:1.15rem; color:var(--primary); }
+.modal-close { width:32px; height:32px; border:none; background:#f0f3f6; border-radius:50%; cursor:pointer; font-size:1.1rem; color:var(--text-secondary); display:flex; align-items:center; justify-content:center; transition:background 0.2s; }
+.modal-close:hover { background:#e0e0e0; }
+.modal-body { padding:20px 24px; }
+
+.modal-tabs { display:flex; gap:0; margin-bottom:20px; border-bottom:2px solid var(--border); }
+.modal-tab { padding:8px 20px; font-size:0.88rem; border:none; background:transparent; cursor:pointer; color:var(--text-secondary); font-weight:600; border-bottom:2px solid transparent; margin-bottom:-2px; transition:all 0.2s; }
+.modal-tab.active { color:var(--accent); border-bottom-color:var(--accent); }
+.modal-panel { display:none; }
+.modal-panel.active { display:block; }
+
+.modal-section h4 { font-size:0.92rem; color:var(--primary); margin-bottom:10px; }
+.modal-section textarea { width:100%; min-height:100px; padding:12px; border:2px solid var(--border); border-radius:8px; font-size:0.88rem; font-family:inherit; resize:vertical; background:var(--bg); color:var(--text); outline:none; }
+.modal-section textarea:focus { border-color:var(--accent); box-shadow:0 0 0 3px rgba(33,150,243,0.08); }
+.modal-actions { display:flex; gap:10px; margin-top:12px; flex-wrap:wrap; }
+.btn { padding:8px 18px; border-radius:8px; font-size:0.85rem; font-weight:600; cursor:pointer; border:none; transition:all 0.2s; }
+.btn-primary { background:var(--accent); color:#fff; }
+.btn-primary:hover { background:#1976d2; }
+.btn-secondary { background:#f0f3f6; color:var(--text); }
+.btn-secondary:hover { background:#e0e6ed; }
+.btn:disabled { opacity:0.5; cursor:not-allowed; }
+
+.candidate-list { list-style:none; margin-top:8px; }
+.candidate-list li { display:flex; align-items:center; gap:10px; padding:10px 12px; border:1px solid var(--border); border-radius:8px; margin-bottom:6px; background:#fafbfd; font-size:0.85rem; cursor:pointer; transition:background 0.15s,border-color 0.15s; }
+.candidate-list li:hover { background:var(--accent-light); }
+.candidate-list li.selected { background:#e8f5e9; border-color:var(--green); }
+.candidate-list li .cand-abbr { font-weight:700; color:var(--primary); min-width:70px; }
+.candidate-list li .cand-full { flex:1; color:var(--text-secondary); }
+.candidate-list li .cand-cat { font-size:0.72rem; background:var(--accent-light); padding:2px 8px; border-radius:10px; }
+
+.manual-form { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.manual-form .full { grid-column:1 / -1; }
+.manual-form input,.manual-form select { width:100%; padding:8px 12px; border:1px solid var(--border); border-radius:6px; font-size:0.85rem; outline:none; background:#fff; }
+.manual-form input:focus,.manual-form select:focus { border-color:var(--accent); box-shadow:0 0 0 3px rgba(33,150,243,0.08); }
+
+.toast { position:fixed; bottom:32px; left:50%; transform:translateX(-50%) translateY(80px); background:#323232; color:#fff; padding:12px 24px; border-radius:8px; font-size:0.85rem; z-index:9999; transition:transform 0.3s; }
+.toast.show { transform:translateX(-50%) translateY(0); }
+
+.footnotes { text-align:center; padding:30px 0 10px; font-size:0.82rem; color:var(--text-secondary); opacity:0.7; }
+
+.back-to-top { position:fixed; bottom:32px; right:32px; width:44px; height:44px; background:var(--accent); color:#fff; border:none; border-radius:50%; cursor:pointer; font-size:1.2rem; box-shadow:0 4px 14px rgba(33,150,243,0.35); opacity:0; transition:opacity 0.3s,transform 0.3s; transform:translateY(20px); z-index:999; display:flex; align-items:center; justify-content:center; }
+.back-to-top.visible { opacity:1; transform:translateY(0); }
+
+/* ===== Tab 内容显隐 ===== */
+.tab-content { display:none; }
+.tab-content.active { display:block; }
+
+@media (max-width:768px) {
+  .hero-inner { flex-direction:column; text-align:center; gap:16px; }
+  .hero-left { flex-direction:column; }
+  .logo-placeholder { width:52px; height:52px; border-radius:10px; }
+  .hero h1 { font-size:1.3rem; } .hero .subtitle { font-size:0.82rem; }
+  .hero { padding:28px 20px 26px; }
+  .tab-nav { padding:0 12px; }
+  .tab-btn { padding:10px 18px; font-size:0.85rem; }
+  .container { padding:0 12px 40px; }
+  .search-bar,.articles-toolbar { padding:16px; margin:0 0 18px; border-radius:0 10px 10px 10px; flex-wrap:wrap; gap:8px; }
+  .search-input { font-size:0.85rem; padding:10px 36px 10px 36px; }
+  .search-count { font-size:0.78rem; }
+  .toc { padding:20px 18px; margin:0 0 28px; border-radius:10px; }
+  .toc-list { grid-template-columns:1fr; }
+  .section { border-radius:10px; margin-bottom:20px; }
+  .section-header { padding:16px; }
+  .section-number { width:36px; height:36px; font-size:0.95rem; border-radius:8px; }
+  .section-title h3 { font-size:1rem; }
+  .section-desc { padding:10px 16px; font-size:0.82rem; }
+  table { font-size:0.78rem; min-width:auto; }
+  thead th { padding:10px; font-size:0.72rem; }
+  tbody td { padding:10px; }
+  td.col-abbr { white-space:normal; }
+  .article-card-header { flex-direction:column; }
+  .manual-form { grid-template-columns:1fr; }
+  .back-to-top { bottom:20px; right:16px; width:38px; height:38px; }
+}
+
+/* ===== AI 智能检索按钮 ===== */
+.btn-ai-wrap { flex-shrink:0; }
+.btn-ai {
+  display:flex; align-items:center; gap:8px;
+  padding:8px 18px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color:#fff; border:none; border-radius:8px;
+  font-size:0.88rem; font-weight:600; cursor:pointer;
+  transition:all 0.3s, box-shadow 0.3s;
+  box-shadow: 0 0 0 0 rgba(102,126,234,0.5);
+  animation: aiPulse 2.5s infinite;
+  position:relative; overflow:hidden;
+}
+.btn-ai::before {
+  content:''; position:absolute; top:-50%; left:-50%; width:200%; height:200%;
+  background:linear-gradient(45deg, transparent 40%, rgba(255,255,255,0.15) 50%, transparent 60%);
+  animation: aiShine 3s infinite;
+}
+.btn-ai:hover {
+  transform:translateY(-2px);
+  box-shadow:0 6px 25px rgba(102,126,234,0.45);
+  animation:none;
+}
+.btn-ai:active { transform:translateY(0); }
+.btn-ai svg { width:18px; height:18px; fill:currentColor; }
+@keyframes aiPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(102,126,234,0.5); }
+  50% { box-shadow: 0 0 0 8px rgba(102,126,234,0); }
+}
+@keyframes aiShine {
+  0% { transform: translateX(-100%) rotate(45deg); }
+  100% { transform: translateX(100%) rotate(45deg); }
+}
+
+/* ===== AI 检索面板 ===== */
+.ai-overlay {
+  position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:1000;
+  display:flex; align-items:center; justify-content:center;
+  opacity:0; visibility:hidden; transition:opacity 0.35s,visibility 0.35s;
+}
+.ai-overlay.open { opacity:1; visibility:visible; }
+.ai-panel {
+  background:var(--card-bg); border-radius:16px;
+  box-shadow:0 20px 60px rgba(0,0,0,0.2);
+  width:92%; max-width:820px; max-height:88vh;
+  overflow-y:auto; transform:translateY(20px);
+  transition:transform 0.35s;
+}
+.ai-overlay.open .ai-panel { transform:translateY(0); }
+.ai-panel-header {
+  padding:20px 24px; border-bottom:1px solid var(--border);
+  display:flex; align-items:center; justify-content:space-between;
+  position:sticky; top:0; background:var(--card-bg); z-index:2;
+  border-radius:16px 16px 0 0;
+}
+.ai-panel-header h3 {
+  font-size:1.15rem; color:var(--primary);
+  display:flex; align-items:center; gap:8px;
+}
+.ai-panel-header h3 .ai-icon {
+  display:inline-block; width:28px; height:28px;
+  background:linear-gradient(135deg, #667eea, #764ba2);
+  border-radius:8px; display:flex; align-items:center; justify-content:center;
+  color:#fff; font-size:0.85rem; font-weight:700;
+}
+.ai-close {
+  width:32px; height:32px; border:none; background:#f0f3f6;
+  border-radius:50%; cursor:pointer; font-size:1.1rem;
+  color:var(--text-secondary); display:flex;
+  align-items:center; justify-content:center;
+  transition:background 0.2s;
+}
+.ai-close:hover { background:#e0e0e0; }
+.ai-panel-body { padding:20px 24px; }
+
+/* 扫描动画 */
+.ai-scanning { text-align:center; padding:40px 20px; }
+.ai-scan-icon {
+  width:64px; height:64px; margin:0 auto 20px;
+  background:linear-gradient(135deg, #667eea, #764ba2);
+  border-radius:50%; display:flex; align-items:center; justify-content:center;
+  animation: aiScanPulse 1.5s ease-in-out infinite;
+}
+.ai-scan-icon svg { width:32px; height:32px; fill:#fff; }
+@keyframes aiScanPulse {
+  0%,100% { transform:scale(1); opacity:1; }
+  50% { transform:scale(1.1); opacity:0.8; }
+}
+.ai-progress-bar {
+  width:300px; max-width:80%; height:6px; margin:16px auto;
+  background:#e0e6ed; border-radius:3px; overflow:hidden;
+}
+.ai-progress-fill {
+  height:100%; width:0;
+  background:linear-gradient(90deg, #667eea, #764ba2);
+  border-radius:3px; transition:width 0.3s;
+}
+.ai-scan-text {
+  font-size:0.9rem; color:var(--text-secondary);
+  margin-top:12px; min-height:24px;
+}
+.ai-scan-text .typing-cursor {
+  display:inline-block; width:2px; height:1em; background:var(--accent);
+  margin-left:2px; animation:blink 0.8s step-end infinite; vertical-align:text-bottom;
+}
+@keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0;} }
+
+/* 结果面板 */
+.ai-results { display:none; }
+.ai-results-header {
+  display:flex; align-items:center; justify-content:space-between;
+  margin-bottom:16px; flex-wrap:wrap; gap:10px;
+}
+.ai-results-header .ai-info {
+  font-size:0.85rem; color:var(--text-secondary);
+}
+.ai-results-header .ai-info strong { color:var(--accent); }
+.btn-ai-add {
+  padding:8px 20px; background:linear-gradient(135deg, #667eea, #764ba2);
+  color:#fff; border:none; border-radius:8px; font-size:0.85rem;
+  font-weight:600; cursor:pointer; transition:all 0.2s;
+  display:flex; align-items:center; gap:6px;
+}
+.btn-ai-add:hover { transform:translateY(-1px); box-shadow:0 4px 15px rgba(102,126,234,0.35); }
+.btn-ai-add:disabled { opacity:0.45; cursor:not-allowed; transform:none; }
+.btn-ai-select-all {
+  padding:8px 16px; background:transparent; border:1.5px solid #667eea;
+  color:#667eea; border-radius:8px; font-size:0.82rem;
+  font-weight:600; cursor:pointer; transition:all 0.2s;
+}
+.btn-ai-select-all:hover { background:rgba(102,126,234,0.08); }
+
+.ai-term-card {
+  display:flex; align-items:center; gap:14px;
+  padding:14px 16px; border:1px solid var(--border);
+  border-radius:10px; margin-bottom:10px;
+  background:#fafbfd; transition:all 0.2s;
+  cursor:pointer;
+}
+.ai-term-card:hover { background:var(--accent-light); border-color:var(--accent); }
+.ai-term-card.selected { background:#e8f5e9; border-color:var(--green); }
+.ai-term-card .ai-checkbox {
+  width:20px; height:20px; border:2px solid #b0bec5;
+  border-radius:5px; flex-shrink:0; display:flex;
+  align-items:center; justify-content:center;
+  transition:all 0.2s; font-size:0.7rem; color:#fff;
+}
+.ai-term-card.selected .ai-checkbox {
+  background:var(--green); border-color:var(--green);
+}
+.ai-term-card .ai-checkbox::after {
+  content:'\2713'; display:none;
+}
+.ai-term-card.selected .ai-checkbox::after { display:block; }
+
+.ai-term-info { flex:1; min-width:0; }
+.ai-term-abbr {
+  font-weight:700; color:var(--primary); font-size:0.92rem;
+  margin-bottom:2px;
+}
+.ai-term-name {
+  font-size:0.82rem; color:var(--text-secondary);
+}
+.ai-term-cat {
+  font-size:0.72rem; background:var(--accent-light);
+  color:var(--accent); padding:3px 10px; border-radius:10px;
+  white-space:nowrap; flex-shrink:0;
+}
+
+.ai-no-results {
+  text-align:center; padding:40px 20px; color:var(--text-secondary);
+  font-size:0.9rem;
+}
+
+@media (max-width:768px) {
+  .ai-term-card { flex-wrap:wrap; gap:8px; }
+  .ai-term-cat { margin-left:34px; }
+  .ai-results-header { flex-direction:column; align-items:flex-start; }
+  .ai-scan-icon { width:48px; height:48px; }
+  .ai-scan-icon svg { width:24px; height:24px; }
+}
+
+</style>
+</head>
+<body class="lang-both">
+
+<header class="hero">
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="logo-placeholder"><img src="MOOVED商标.jpg" alt="公司标志"></div>
+      <div class="hero-text">
+        <h1 data-lang-zh>MOOVED 电气光伏知识库</h1>
+        <h1 data-lang-en>MOOVED Electrical & PV Knowledge Base</h1>
+        <p class="subtitle" data-lang-zh>覆盖术语词典与知识文章，助力电气光伏领域学习与实践</p>
+        <p class="subtitle" data-lang-en>Terminology dictionary & knowledge articles for electrical and PV domain</p>
+      </div>
+    </div>
+    <div class="lang-switch">
+      <button class="lang-btn active" data-lang="both">中英双语</button>
+      <button class="lang-btn" data-lang="zh">中文</button>
+      <button class="lang-btn" data-lang="en">English</button>
+    </div>
+  </div>
+</header>
+
+<!-- Tab 导航 -->
+<div class="tab-nav">
+  <button class="tab-btn active" data-tab="terms"><span class="tab-icon">&#x1F4D6;</span><span data-lang-zh>术语词典</span><span data-lang-en>Terminology</span></button>
+  <button class="tab-btn" data-tab="articles"><span class="tab-icon">&#x1F4D0;</span><span data-lang-zh>知识文章</span><span data-lang-en>Articles</span></button>
+</div>
+
+<!-- ==================== Tab 1: 术语词典 ==================== -->
+<div class="tab-content active" id="tab-terms">
+<div class="container">
+
+  <div class="search-bar">
+    <div class="search-input-wrap">
+      <span class="search-icon">&#x1F50D;</span>
+      <input type="text" class="search-input" id="searchInput" placeholder="搜索缩写、中文名称或英文全称…" autocomplete="off" data-placeholder-zh="搜索缩写、中文名称或英文全称…" data-placeholder-en="Search abbreviation, Chinese or English name…">
+      <button class="search-clear" id="searchClear" title="清除搜索">&times;</button>
+      <div class="suggestions" id="suggestions"></div>
+    </div>
+    <span class="search-count" id="searchCount">151 条术语</span>
+    <div class="btn-add-wrap">
+      <button class="btn-add" id="btnAddTerm">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>
+        <span data-lang-zh>添加内容</span><span data-lang-en>Add Content</span>
+      </button>
+    </div>
+    <div class="btn-ai-wrap">
+      <button class="btn-ai" id="btnAiSearch" title="AI 智能检索">
+        <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        <span data-lang-zh>AI 检索</span><span data-lang-en>AI Search</span>
+      </button>
+    </div>
+  </div>
+
+  <nav class="toc">
+    <h2><span data-lang-zh>目录导航</span><span data-lang-en>Table of Contents</span></h2>
+    <ol class="toc-list" style="counter-reset:toc-counter;"><li><a href="#sec-1" data-nav="#sec-1" data-tab="terms"><span data-lang-zh>基础电气与配电保护类</span><span data-lang-en>Electrical & Distribution Protection</span></a></li>
+<li><a href="#sec-2" data-nav="#sec-2" data-tab="terms"><span data-lang-zh>光伏组件与附件类</span><span data-lang-en>PV Modules & Accessories</span></a></li>
+<li><a href="#sec-3" data-nav="#sec-3" data-tab="terms"><span data-lang-zh>逆变器与能量转换类</span><span data-lang-en>Inverters & Energy Conversion</span></a></li>
+<li><a href="#sec-4" data-nav="#sec-4" data-tab="terms"><span data-lang-zh>线缆、连接与接地类</span><span data-lang-en>Cabling, Connectivity & Grounding</span></a></li>
+<li><a href="#sec-5" data-nav="#sec-5" data-tab="terms"><span data-lang-zh>并网、系统与政策类</span><span data-lang-en>Grid-tie, Systems & Policy</span></a></li>
+<li><a href="#sec-6" data-nav="#sec-6" data-tab="terms"><span data-lang-zh>经济性与项目评估类</span><span data-lang-en>Economics & Project Evaluation</span></a></li>
+<li><a href="#sec-7" data-nav="#sec-7" data-tab="terms"><span data-lang-zh>安全与安装规范类</span><span data-lang-en>Safety & Installation Codes</span></a></li>
+<li><a href="#sec-8" data-nav="#sec-8" data-tab="terms"><span data-lang-zh>储能系统类</span><span data-lang-en>Energy Storage Systems</span></a></li>
+<li><a href="#sec-9" data-nav="#sec-9" data-tab="terms"><span data-lang-zh>电站监控与环境监测类</span><span data-lang-en>Plant Monitoring & Environmental Sensing</span></a></li>
+<li><a href="#sec-10" data-nav="#sec-10" data-tab="terms"><span data-lang-zh>标准与认证类</span><span data-lang-en>Standards & Certifications</span></a></li></ol>
+  </nav>
+
+<section class="section" id="sec-1">
+    <div class="section-header">
+      <div class="section-number">01</div>
+      <div class="section-title">
+        <h3><span data-lang-zh>基础电气与配电保护类</span><span data-lang-en>Electrical & Distribution Protection</span></h3>
+        <div class="en-title"><span data-lang-zh>Electrical & Distribution Protection</span></div>
+      </div>
+    </div>
+    <div class="section-desc"><span data-lang-zh>低压配电系统中用于电路保护、控制和测量的核心设备。</span><span data-lang-en>Core equipment for circuit protection, control and measurement in low-voltage distribution systems.</span></div>
+    <div class="table-wrapper">
+      <table>
+        <thead><tr><th>缩写</th><th class="en-col">英文全称</th><th class="cn-col">中文名称</th><th>简要解释</th></tr></thead>
+        <tbody><tr data-abbr="MCB" data-cn="微型断路器"><td class="col-abbr">MCB</td><td class="col en-col">Miniature Circuit Breaker</td><td class="col cn-col">微型断路器</td><td class="col-desc"><span data-lang-zh>用于过载和短路保护的常用开关装置，可手动闭合/断开，故障时自动跳闸。</span><span data-lang-en>Common switching device for overload and short-circuit protection; manually closed/opened, trips automatically on fault.</span></td></tr>
+<tr data-abbr="RCCB" data-cn="剩余电流动作断路器 (漏电开关)"><td class="col-abbr">RCCB</td><td class="col en-col">Residual Current Operated Circuit-Breaker</td><td class="col cn-col">剩余电流动作断路器 (漏电开关)</td><td class="col-desc"><span data-lang-zh>检测线路中的漏电电流（剩余电流），当超过设定值时迅速切断电源，防止触电。注：它不具备过载保护功能。</span><span data-lang-en>Detects residual (leakage) current in circuits; cuts off power when threshold exceeded to prevent electric shock. Note: does not provide overload protection.</span></td></tr>
+<tr data-abbr="RCBO" data-cn="剩余电流动作断路器（带过流保护）"><td class="col-abbr">RCBO</td><td class="col en-col">Residual Current Circuit Breaker with Overcurrent Protection</td><td class="col cn-col">剩余电流动作断路器（带过流保护）</td><td class="col-desc"><span data-lang-zh>集成了MCB（过载/短路保护）和RCCB（漏电保护）功能于一体的单一装置。</span><span data-lang-en>Combines MCB (overload/short-circuit) and RCCB (earth leakage) functions in a single device.</span></td></tr>
+<tr data-abbr="SPD" data-cn="电涌保护器 (避雷器)"><td class="col-abbr">SPD</td><td class="col en-col">Surge Protection Device</td><td class="col cn-col">电涌保护器 (避雷器)</td><td class="col-desc"><span data-lang-zh>用于限制瞬态过电压和泄放电涌电流的装置，保护电气设备免受雷击或操作过电压的冲击。</span><span data-lang-en>Device for limiting transient overvoltage and diverting surge current, protecting equipment from lightning and switching surges.</span></td></tr>
+<tr data-abbr="ACB" data-cn="空气断路器"><td class="col-abbr">ACB</td><td class="col en-col">Air Circuit Breaker</td><td class="col cn-col">空气断路器</td><td class="col-desc"><span data-lang-zh>常用于低压配电系统的进线、馈线等大电流场合，具有较高的分断能力和完善的保护功能。</span><span data-lang-en>High-current air-insulated breaker for main incomer/feeder applications in LV distribution, with high breaking capacity.</span></td></tr>
+<tr data-abbr="MCCB" data-cn="塑壳断路器"><td class="col-abbr">MCCB</td><td class="col en-col">Moulded Case Circuit Breaker</td><td class="col cn-col">塑壳断路器</td><td class="col-desc"><span data-lang-zh>介于MCB和ACB之间，用于中等电流等级的电路保护，外壳采用模压绝缘材料。</span><span data-lang-en>Mid-range breaker between MCB and ACB, with moulded insulating case for medium-current protection.</span></td></tr>
+<tr data-abbr="RCD" data-cn="剩余电流动作保护器"><td class="col-abbr">RCD</td><td class="col en-col">Residual Current Device</td><td class="col cn-col">剩余电流动作保护器</td><td class="col-desc"><span data-lang-zh>一个通用术语，泛指所有用于防止触电和电气火灾的漏电保护设备（同RCCB原理）。</span><span data-lang-en>Generic term covering all residual-current protective devices used to prevent electric shock and electrical fires.</span></td></tr>
+<tr data-abbr="ELCB" data-cn="接地漏电断路器"><td class="col-abbr">ELCB</td><td class="col en-col">Earth Leakage Circuit Breaker</td><td class="col cn-col">接地漏电断路器</td><td class="col-desc"><span data-lang-zh>老式术语，现多被RCCB/RCBO取代，指利用接地故障电流或电压原理进行保护。</span><span data-lang-en>Legacy term, largely replaced by RCCB/RCBO; refers to protection based on earth fault current or voltage.</span></td></tr>
+<tr data-abbr="VFD" data-cn="变频驱动器"><td class="col-abbr">VFD</td><td class="col en-col">Variable Frequency Drive</td><td class="col cn-col">变频驱动器</td><td class="col-desc"><span data-lang-zh>通过改变电机工作电源频率来控制交流电机转速的电力控制设备。</span><span data-lang-en>Power control device that varies motor speed by adjusting the supply frequency of AC motors.</span></td></tr>
+<tr data-abbr="PLC" data-cn="可编程逻辑控制器"><td class="col-abbr">PLC</td><td class="col en-col">Programmable Logic Controller</td><td class="col cn-col">可编程逻辑控制器</td><td class="col-desc"><span data-lang-zh>一种专为在工业环境下应用而设计的数字运算操作的电子装置，用于控制机械生产过程。</span><span data-lang-en>Industrial digital computer designed for controlling manufacturing processes and machinery.</span></td></tr>
+<tr data-abbr="SCADA" data-cn="数据采集与监视控制系统"><td class="col-abbr">SCADA</td><td class="col en-col">Supervisory Control And Data Acquisition</td><td class="col cn-col">数据采集与监视控制系统</td><td class="col-desc"><span data-lang-zh>一种基于计算机的自动化系统，用于监控和控制分散的设备和过程。</span><span data-lang-en>Computer-based automation system for monitoring and controlling dispersed equipment and processes.</span></td></tr>
+<tr data-abbr="kW" data-cn="千瓦"><td class="col-abbr">kW</td><td class="col en-col">kilowatt</td><td class="col cn-col">千瓦</td><td class="col-desc"><span data-lang-zh>功率单位，1千瓦 = 1000瓦特。</span><span data-lang-en>Unit of power: 1 kilowatt = 1000 watts.</span></td></tr>
+<tr data-abbr="kWh" data-cn="千瓦时 (度)"><td class="col-abbr">kWh</td><td class="col en-col">kilowatt-hour</td><td class="col cn-col">千瓦时 (度)</td><td class="col-desc"><span data-lang-zh>电能单位，1千瓦时表示功率为1千瓦的电器工作1小时所消耗的电能。</span><span data-lang-en>Unit of energy: energy consumed by a 1 kW device operating for 1 hour.</span></td></tr>
+<tr data-abbr="ATS" data-cn="双电源自动切换开关"><td class="col-abbr">ATS</td><td class="col en-col">Automatic Transfer Switch</td><td class="col cn-col">双电源自动切换开关</td><td class="col-desc"><span data-lang-zh>当主电源故障时自动切换至备用电源，确保重要负载不间断供电。</span><span data-lang-en>Automatically transfers load to backup power when main supply fails, ensuring uninterrupted supply for critical loads.</span></td></tr>
+<tr data-abbr="CT" data-cn="电流互感器"><td class="col-abbr">CT</td><td class="col en-col">Current Transformer</td><td class="col cn-col">电流互感器</td><td class="col-desc"><span data-lang-zh>将一次侧大电流按比例变换为二次侧标准小电流（通常为5A或1A），供测量仪表和继电保护使用。</span><span data-lang-en>Steps down primary high current to standard secondary low current (typically 5A or 1A) for metering and protection relays.</span></td></tr>
+<tr data-abbr="PT/VT" data-cn="电压互感器"><td class="col-abbr">PT/VT</td><td class="col en-col">Potential Transformer / Voltage Transformer</td><td class="col cn-col">电压互感器</td><td class="col-desc"><span data-lang-zh>将一次侧高电压按比例变换为二次侧标准低电压（通常为100V），供测量和保护装置使用。</span><span data-lang-en>Steps down primary high voltage to standard secondary low voltage (typically 100V) for metering and protection devices.</span></td></tr>
+<tr data-abbr="Relay" data-cn="继电器"><td class="col-abbr">Relay</td><td class="col en-col"></td><td class="col cn-col">继电器</td><td class="col-desc"><span data-lang-zh>一种电控开关，利用小电流控制大电流电路的通断，广泛用于保护和控制回路。</span><span data-lang-en>Electrically operated switch using small current to control larger current circuits, widely used in protection and control.</span></td></tr>
+<tr data-abbr="Contactor" data-cn="接触器"><td class="col-abbr">Contactor</td><td class="col en-col"></td><td class="col cn-col">接触器</td><td class="col-desc"><span data-lang-zh>用于频繁接通和分断负载电路的电控开关，常用于电机控制、照明控制等场景。</span><span data-lang-en>Electrically controlled switch for frequent making/breaking of load circuits, common in motor and lighting control.</span></td></tr>
+<tr data-abbr="THDi" data-cn="电流谐波总畸变率"><td class="col-abbr">THDi</td><td class="col en-col">Total Harmonic Current Distortion</td><td class="col cn-col">电流谐波总畸变率</td><td class="col-desc"><span data-lang-zh>衡量电流中谐波分量相对于基波分量的比例的指标，反映电网电能质量。</span><span data-lang-en>Ratio of harmonic current components to fundamental, indicating power quality in the grid.</span></td></tr>
+<tr data-abbr="CB" data-cn="断路器"><td class="col-abbr">CB</td><td class="col en-col">Circuit Breaker</td><td class="col cn-col">断路器</td><td class="col-desc"><span data-lang-zh>能够接通、承载和分断正常及故障条件下电流的机械开关装置。</span><span data-lang-en>Mechanical switching device capable of making, carrying and breaking currents under normal and fault conditions.</span></td></tr></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="section" id="sec-2">
+    <div class="section-header">
+      <div class="section-number">02</div>
+      <div class="section-title">
+        <h3><span data-lang-zh>光伏组件与附件类</span><span data-lang-en>PV Modules & Accessories</span></h3>
+        <div class="en-title"><span data-lang-zh>PV Modules & Accessories</span></div>
+      </div>
+    </div>
+    <div class="section-desc"><span data-lang-zh>太阳能电池板本身及其机械安装和电气连接的基础部件。</span><span data-lang-en>Solar panels and their essential mechanical mounting and electrical interconnection components.</span></div>
+    <div class="table-wrapper">
+      <table>
+        <thead><tr><th>缩写</th><th class="en-col">英文全称</th><th class="cn-col">中文名称</th><th>简要解释</th></tr></thead>
+        <tbody><tr data-abbr="PV" data-cn="光伏（太阳能光伏）"><td class="col-abbr">PV</td><td class="col en-col">Photovoltaic</td><td class="col cn-col">光伏（太阳能光伏）</td><td class="col-desc"><span data-lang-zh>利用半导体材料的光生伏特效应，将光能直接转换为电能的技术。</span><span data-lang-en>Technology that converts sunlight directly into electricity using the photovoltaic effect in semiconductor materials.</span></td></tr>
+<tr data-abbr="STC" data-cn="标准测试条件"><td class="col-abbr">STC</td><td class="col en-col">Standard Test Conditions</td><td class="col cn-col">标准测试条件</td><td class="col-desc"><span data-lang-zh>用于标定光伏组件功率的测试标准，通常为：光照强度1000W/m²，电池温度25°C，大气质量AM1.5。</span><span data-lang-en>Standard rating conditions: irradiance 1000 W/m², cell temperature 25°C, air mass AM1.5.</span></td></tr>
+<tr data-abbr="NOCT" data-cn="标称工作电池温度"><td class="col-abbr">NOCT</td><td class="col en-col">Nominal Operating Cell Temperature</td><td class="col cn-col">标称工作电池温度</td><td class="col-desc"><span data-lang-zh>更接近实际运行条件的测试标准，通常为：光照800W/m²，环境温度20°C，风速1m/s。</span><span data-lang-en>Real-world test conditions: irradiance 800 W/m², ambient 20°C, wind 1 m/s.</span></td></tr>
+<tr data-abbr="BIPV" data-cn="光伏建筑一体化"><td class="col-abbr">BIPV</td><td class="col en-col">Building Integrated Photovoltaic</td><td class="col cn-col">光伏建筑一体化</td><td class="col-desc"><span data-lang-zh>将光伏组件作为建筑材料（如屋顶瓦片、玻璃幕墙）集成到建筑结构中。</span><span data-lang-en>Integrating PV modules as building materials (roof tiles, glass facades) directly into the building envelope.</span></td></tr>
+<tr data-abbr="BAPV" data-cn="建筑附着式光伏"><td class="col-abbr">BAPV</td><td class="col en-col">Building Attached Photovoltaic</td><td class="col cn-col">建筑附着式光伏</td><td class="col-desc"><span data-lang-zh>将光伏组件附加安装在已有建筑表面（如在屋顶上架设支架安装组件）。</span><span data-lang-en>Retrofitting PV modules onto existing building surfaces using mounting structures.</span></td></tr>
+<tr data-abbr="Junction Box" data-cn="接线盒"><td class="col-abbr">Junction Box</td><td class="col en-col"></td><td class="col cn-col">接线盒</td><td class="col-desc"><span data-lang-zh>安装在光伏组件背面的电气保护盒，包含旁路二极管，用于连接内部电池片和外部线缆。</span><span data-lang-en>Protective enclosure on the module rear housing bypass diodes and connecting internal cells to external cables.</span></td></tr>
+<tr data-abbr="Bypass Diode" data-cn="旁路二极管"><td class="col-abbr">Bypass Diode</td><td class="col en-col"></td><td class="col cn-col">旁路二极管</td><td class="col-desc"><span data-lang-zh>并联在光伏电池串两端，当部分电池片被遮挡时，提供电流通路，防止热斑效应。</span><span data-lang-en>Diode connected in parallel across cell strings to provide current path when cells are shaded, preventing hot spots.</span></td></tr>
+<tr data-abbr="Isc" data-cn="短路电流"><td class="col-abbr">Isc</td><td class="col en-col">Short Circuit Current</td><td class="col cn-col">短路电流</td><td class="col-desc"><span data-lang-zh>光伏组件在标准测试条件下，正负极短路时的输出电流，是组件的关键电性参数之一。</span><span data-lang-en>Current output when module terminals are short-circuited under STC; a key electrical rating.</span></td></tr>
+<tr data-abbr="Voc" data-cn="开路电压"><td class="col-abbr">Voc</td><td class="col en-col">Open Circuit Voltage</td><td class="col cn-col">开路电压</td><td class="col-desc"><span data-lang-zh>光伏组件在标准测试条件下，正负极断开时的输出电压，是组件的关键电性参数之一。</span><span data-lang-en>Voltage output when module terminals are open-circuited under STC; a key electrical rating.</span></td></tr>
+<tr data-abbr="Vmp" data-cn="最大功率点电压"><td class="col-abbr">Vmp</td><td class="col en-col">Voltage at Maximum Power</td><td class="col cn-col">最大功率点电压</td><td class="col-desc"><span data-lang-zh>光伏组件输出最大功率时的工作电压。</span><span data-lang-en>Operating voltage at the module's maximum power point.</span></td></tr>
+<tr data-abbr="Imp" data-cn="最大功率点电流"><td class="col-abbr">Imp</td><td class="col en-col">Current at Maximum Power</td><td class="col cn-col">最大功率点电流</td><td class="col-desc"><span data-lang-zh>光伏组件输出最大功率时的工作电流。</span><span data-lang-en>Operating current at the module's maximum power point.</span></td></tr>
+<tr data-abbr="FF" data-cn="填充因子"><td class="col-abbr">FF</td><td class="col en-col">Fill Factor</td><td class="col cn-col">填充因子</td><td class="col-desc"><span data-lang-zh>实际最大功率与理论最大功率（Voc × Isc）的比值，反映电池品质的重要指标。</span><span data-lang-en>Ratio of actual max power to theoretical max power (Voc × Isc), a key metric of cell quality.</span></td></tr>
+<tr data-abbr="PID" data-cn="电势诱导衰减"><td class="col-abbr">PID</td><td class="col en-col">Potential Induced Degradation</td><td class="col cn-col">电势诱导衰减</td><td class="col-desc"><span data-lang-zh>光伏组件在高电压作用下，因漏电流导致的功率衰减现象，多发于湿热环境。</span><span data-lang-en>Power degradation caused by leakage current under high voltage stress, common in hot-humid environments.</span></td></tr>
+<tr data-abbr="LID" data-cn="光致衰减"><td class="col-abbr">LID</td><td class="col en-col">Light Induced Degradation</td><td class="col cn-col">光致衰减</td><td class="col-desc"><span data-lang-zh>光伏组件在初始光照下发生的功率衰减，通常在首年可达1%-3%。</span><span data-lang-en>Initial power degradation upon first light exposure, typically 1%-3% in the first year.</span></td></tr>
+<tr data-abbr="Hot Spot" data-cn="热斑效应"><td class="col-abbr">Hot Spot</td><td class="col en-col"></td><td class="col cn-col">热斑效应</td><td class="col-desc"><span data-lang-zh>光伏组件中某片电池被遮挡或损坏时，该电池成为负载发热，可能导致组件永久损坏。</span><span data-lang-en>Localized overheating when a shaded/damaged cell acts as a load, potentially causing permanent module damage.</span></td></tr>
+<tr data-abbr="Half-cell" data-cn="半片电池"><td class="col-abbr">Half-cell</td><td class="col en-col"></td><td class="col cn-col">半片电池</td><td class="col-desc"><span data-lang-zh>将标准电池片切成两半，降低电流和内阻损失，提升组件功率和抗遮挡能力。</span><span data-lang-en>Standard cell cut in half to reduce current and resistive losses, boosting power and shade tolerance.</span></td></tr>
+<tr data-abbr="Bifacial" data-cn="双面组件"><td class="col-abbr">Bifacial</td><td class="col en-col"></td><td class="col cn-col">双面组件</td><td class="col-desc"><span data-lang-zh>正面和背面均能接收光照并发电的光伏组件，可利用地面反射光增加发电量。</span><span data-lang-en>Modules generating power from both front and rear sides, capturing ground-reflected light for yield gain.</span></td></tr>
+<tr data-abbr="PERC" data-cn="钝化发射极与背面电池"><td class="col-abbr">PERC</td><td class="col en-col">Passivated Emitter and Rear Cell</td><td class="col cn-col">钝化发射极与背面电池</td><td class="col-desc"><span data-lang-zh>在电池背面增加钝化层的技术，可显著提升电池转换效率，是目前主流电池技术。</span><span data-lang-en>Technology adding a passivation layer on the rear side for significantly higher conversion efficiency; current mainstream.</span></td></tr>
+<tr data-abbr="HJT" data-cn="异质结电池"><td class="col-abbr">HJT</td><td class="col en-col">Heterojunction Technology</td><td class="col cn-col">异质结电池</td><td class="col-desc"><span data-lang-zh>结合晶体硅和非晶硅薄膜的电池技术，具有高效率、低温度系数的特点。</span><span data-lang-en>Cell technology combining crystalline and amorphous silicon layers for high efficiency and low temperature coefficient.</span></td></tr>
+<tr data-abbr="TOPCon" data-cn="隧穿氧化层钝化接触电池"><td class="col-abbr">TOPCon</td><td class="col en-col">Tunnel Oxide Passivated Contact</td><td class="col cn-col">隧穿氧化层钝化接触电池</td><td class="col-desc"><span data-lang-zh>在电池背面制备超薄氧化层和多晶硅层的技术，实现高效率和高双面率。</span><span data-lang-en>Cell with ultra-thin tunnel oxide and polysilicon layers on rear for high efficiency and high bifaciality.</span></td></tr>
+<tr data-abbr="IBC" data-cn="背接触电池"><td class="col-abbr">IBC</td><td class="col en-col">Interdigitated Back Contact</td><td class="col cn-col">背接触电池</td><td class="col-desc"><span data-lang-zh>正负电极均位于电池背面的电池结构，正面无栅线遮挡，效率更高、外观更美观。</span><span data-lang-en>Cell with both contacts on the rear, eliminating front grid shading for higher efficiency and cleaner aesthetics.</span></td></tr>
+<tr data-abbr="MBB" data-cn="多主栅"><td class="col-abbr">MBB</td><td class="col en-col">Multi Busbar</td><td class="col cn-col">多主栅</td><td class="col-desc"><span data-lang-zh>在电池表面使用更多、更细的主栅线的技术，降低串联电阻和电流密度，提升功率和可靠性。</span><span data-lang-en>Technology using more and thinner busbars on cells to reduce series resistance and improve power and reliability.</span></td></tr>
+<tr data-abbr="Shingled" data-cn="叠瓦组件"><td class="col-abbr">Shingled</td><td class="col en-col"></td><td class="col cn-col">叠瓦组件</td><td class="col-desc"><span data-lang-zh>将电池片切成条状并像屋顶瓦片一样重叠排列的技术，消除片间间隙，提升组件功率密度。</span><span data-lang-en>Cells cut into strips and overlapped like roof shingles, eliminating inter-cell gaps and boosting power density.</span></td></tr></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="section" id="sec-3">
+    <div class="section-header">
+      <div class="section-number">03</div>
+      <div class="section-title">
+        <h3><span data-lang-zh>逆变器与能量转换类</span><span data-lang-en>Inverters & Energy Conversion</span></h3>
+        <div class="en-title"><span data-lang-zh>Inverters & Energy Conversion</span></div>
+      </div>
+    </div>
+    <div class="section-desc"><span data-lang-zh>涉及将直流电(DC)转换为交流电(AC)以及能量管理的核心设备。</span><span data-lang-en>Core equipment for converting direct current (DC) to alternating current (AC) and managing energy flow.</span></div>
+    <div class="table-wrapper">
+      <table>
+        <thead><tr><th>缩写</th><th class="en-col">英文全称</th><th class="cn-col">中文名称</th><th>简要解释</th></tr></thead>
+        <tbody><tr data-abbr="MPPT" data-cn="最大功率点跟踪"><td class="col-abbr">MPPT</td><td class="col en-col">Maximum Power Point Tracking</td><td class="col cn-col">最大功率点跟踪</td><td class="col-desc"><span data-lang-zh>逆变器或控制器中的一项核心技术，通过实时调节电压电流，使光伏阵列始终输出最大功率。</span><span data-lang-en>Core technology in inverters/controllers that continuously adjusts voltage/current to extract maximum power from PV arrays.</span></td></tr>
+<tr data-abbr="PWM" data-cn="脉冲宽度调制"><td class="col-abbr">PWM</td><td class="col en-col">Pulse Width Modulation</td><td class="col cn-col">脉冲宽度调制</td><td class="col-desc"><span data-lang-zh>一种较简单的充电控制技术，通过快速开关调节充电电流，效率低于MPPT。</span><span data-lang-en>Simpler charge control technique regulating current via rapid switching; less efficient than MPPT.</span></td></tr>
+<tr data-abbr="DC" data-cn="直流电"><td class="col-abbr">DC</td><td class="col en-col">Direct Current</td><td class="col cn-col">直流电</td><td class="col-desc"><span data-lang-zh>方向保持不变的电流，光伏组件产生的是直流电。</span><span data-lang-en>Current that flows in one constant direction; photovoltaic modules generate DC.</span></td></tr>
+<tr data-abbr="AC" data-cn="交流电"><td class="col-abbr">AC</td><td class="col en-col">Alternating Current</td><td class="col cn-col">交流电</td><td class="col-desc"><span data-lang-zh>大小和方向随时间作周期性变化的电流，电网和家用插座提供的是交流电。</span><span data-lang-en>Current that periodically reverses direction and magnitude; the grid and household sockets supply AC.</span></td></tr>
+<tr data-abbr="String Inverter" data-cn="组串式逆变器"><td class="col-abbr">String Inverter</td><td class="col en-col"></td><td class="col cn-col">组串式逆变器</td><td class="col-desc"><span data-lang-zh>将多块光伏组件串联（形成一个组串）后接入的逆变器，是目前户用和工商业项目的主流选择。</span><span data-lang-en>Inverter connected to a series string of PV modules; the mainstream choice for residential and C&I projects.</span></td></tr>
+<tr data-abbr="Micro Inverter" data-cn="微型逆变器"><td class="col-abbr">Micro Inverter</td><td class="col en-col"></td><td class="col cn-col">微型逆变器</td><td class="col-desc"><span data-lang-zh>直接安装在每块光伏组件背面的小型逆变器，实现组件级的最大功率点跟踪和优化。</span><span data-lang-en>Small inverter mounted directly behind each module, enabling module-level MPPT and optimization.</span></td></tr>
+<tr data-abbr="Central Inverter" data-cn="集中式逆变器"><td class="col-abbr">Central Inverter</td><td class="col en-col"></td><td class="col cn-col">集中式逆变器</td><td class="col-desc"><span data-lang-zh>功率较大（通常>100kW），将大量并联的组串汇总后统一逆变，常用于大型地面电站。</span><span data-lang-en>High-power unit (typically >100 kW) inverting combined parallel strings; common in utility-scale plants.</span></td></tr>
+<tr data-abbr="Hybrid Inverter" data-cn="混合逆变器"><td class="col-abbr">Hybrid Inverter</td><td class="col en-col"></td><td class="col cn-col">混合逆变器</td><td class="col-desc"><span data-lang-zh>集成了太阳能逆变和电池储能管理功能于一体的逆变器，可优先给电池充电。</span><span data-lang-en>Inverter integrating solar inversion and battery energy management; can prioritize battery charging.</span></td></tr>
+<tr data-abbr="Clipping" data-cn="削峰 / 功率限制"><td class="col-abbr">Clipping</td><td class="col en-col"></td><td class="col cn-col">削峰 / 功率限制</td><td class="col-desc"><span data-lang-zh>当光照过强导致直流输入功率超过逆变器的最大交流输出功率时，逆变器主动限制输出，造成部分能量损失。</span><span data-lang-en>When DC input exceeds the inverter's max AC output rating, the inverter limits output, resulting in energy loss.</span></td></tr>
+<tr data-abbr="THD" data-cn="总谐波失真"><td class="col-abbr">THD</td><td class="col en-col">Total Harmonic Distortion</td><td class="col cn-col">总谐波失真</td><td class="col-desc"><span data-lang-zh>衡量逆变器输出交流电波形的质量指标，THD越低，输出波形越接近理想正弦波。</span><span data-lang-en>Quality metric for inverter AC output waveform; lower THD means closer to an ideal sine wave.</span></td></tr>
+<tr data-abbr="Power Factor" data-cn="功率因数"><td class="col-abbr">Power Factor</td><td class="col en-col"></td><td class="col cn-col">功率因数</td><td class="col-desc"><span data-lang-zh>交流电路中，有功功率与视在功率的比值，范围0~1。逆变器通常要求PF>0.99。</span><span data-lang-en>Ratio of real power to apparent power in AC circuits (0–1); inverters typically require >0.99.</span></td></tr>
+<tr data-abbr="Islanding" data-cn="孤岛效应"><td class="col-abbr">Islanding</td><td class="col en-col"></td><td class="col cn-col">孤岛效应</td><td class="col-desc"><span data-lang-zh>电网断电后，光伏逆变器仍继续向局部电网供电的现象。必须配备防孤岛保护。</span><span data-lang-en>Condition where the inverter continues to energize a local grid section after utility disconnection; anti-islanding required.</span></td></tr>
+<tr data-abbr="Transformerless" data-cn="无变压器型逆变器"><td class="col-abbr">Transformerless</td><td class="col en-col"></td><td class="col cn-col">无变压器型逆变器</td><td class="col-desc"><span data-lang-zh>省略了隔离变压器的逆变器，体积更小、效率更高，但对直流分量和漏电流控制要求更严。</span><span data-lang-en>Inverter without an isolation transformer for smaller size and higher efficiency, but requiring stricter DC injection and leakage control.</span></td></tr>
+<tr data-abbr="European Efficiency" data-cn="欧洲效率"><td class="col-abbr">European Efficiency</td><td class="col en-col"></td><td class="col cn-col">欧洲效率</td><td class="col-desc"><span data-lang-zh>一种加权效率指标，模拟欧洲日照分布下不同负载率的加权平均效率，反映逆变器实际运行性能。</span><span data-lang-en>Weighted efficiency metric simulating European solar irradiance distribution at various load levels to reflect real-world performance.</span></td></tr>
+<tr data-abbr="CEC Efficiency" data-cn="加州效率"><td class="col-abbr">CEC Efficiency</td><td class="col en-col"></td><td class="col cn-col">加州效率</td><td class="col-desc"><span data-lang-zh>美国加州能源委员会定义的加权效率标准，与欧洲效率类似但权重分布不同，适用于北美市场。</span><span data-lang-en>Weighted efficiency standard defined by the California Energy Commission, similar to European but with different weighting for the North American market.</span></td></tr>
+<tr data-abbr="MPPT Channels" data-cn="MPPT 路数"><td class="col-abbr">MPPT Channels</td><td class="col en-col"></td><td class="col cn-col">MPPT 路数</td><td class="col-desc"><span data-lang-zh>逆变器独立MPPT跟踪通道的数量。多路MPPT可适应不同朝向/遮挡的组串，减少失配损失。</span><span data-lang-en>Number of independent MPPT tracking channels; multiple channels accommodate different orientations/shading, reducing mismatch loss.</span></td></tr>
+<tr data-abbr="Start-up Voltage" data-cn="启动电压"><td class="col-abbr">Start-up Voltage</td><td class="col en-col"></td><td class="col cn-col">启动电压</td><td class="col-desc"><span data-lang-zh>逆变器开始并网发电所需的最低直流输入电压。启动电压越低，逆变器可更早开始和更晚结束发电。</span><span data-lang-en>Minimum DC input voltage required for the inverter to begin grid-connected operation; lower voltage enables earlier start and later shutoff.</span></td></tr></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="section" id="sec-4">
+    <div class="section-header">
+      <div class="section-number">04</div>
+      <div class="section-title">
+        <h3><span data-lang-zh>线缆、连接与接地类</span><span data-lang-en>Cabling, Connectivity & Grounding</span></h3>
+        <div class="en-title"><span data-lang-zh>Cabling, Connectivity & Grounding</span></div>
+      </div>
+    </div>
+    <div class="section-desc"><span data-lang-zh>涉及光伏系统内部及与外部连接的线缆、接插件和接地系统。</span><span data-lang-en>Cables, connectors and grounding systems within the PV system and at external interfaces.</span></div>
+    <div class="table-wrapper">
+      <table>
+        <thead><tr><th>缩写</th><th class="en-col">英文全称</th><th class="cn-col">中文名称</th><th>简要解释</th></tr></thead>
+        <tbody><tr data-abbr="DC Cable" data-cn="直流线缆"><td class="col-abbr">DC Cable</td><td class="col en-col"></td><td class="col cn-col">直流线缆</td><td class="col-desc"><span data-lang-zh>用于传输光伏组件产生的直流电，需具备抗紫外线、耐高低温等特性。</span><span data-lang-en>Cable for transmitting DC power from PV modules; must withstand UV radiation and extreme temperatures.</span></td></tr>
+<tr data-abbr="AC Cable" data-cn="交流线缆"><td class="col-abbr">AC Cable</td><td class="col en-col"></td><td class="col cn-col">交流线缆</td><td class="col-desc"><span data-lang-zh>用于传输逆变器输出的交流电，连接至并网点或负载。</span><span data-lang-en>Cable for transmitting AC output from the inverter to the grid connection point or load.</span></td></tr>
+<tr data-abbr="MC4" data-cn="MC4连接器"><td class="col-abbr">MC4</td><td class="col en-col"></td><td class="col cn-col">MC4连接器</td><td class="col-desc"><span data-lang-zh>一种通用的防水、防晒光伏专用直流连接器，用于组件之间或组件与逆变器之间的快速插拔连接。</span><span data-lang-en>Weatherproof, sunlight-resistant DC snap connector widely used for module interconnections and inverter hookups.</span></td></tr>
+<tr data-abbr="PV Wire" data-cn="光伏专用线缆"><td class="col-abbr">PV Wire</td><td class="col en-col"></td><td class="col cn-col">光伏专用线缆</td><td class="col-desc"><span data-lang-zh>一种经过辐照交联的双绝缘单芯铜线缆，专门用于光伏系统，具有极高的耐候性。</span><span data-lang-en>Irradiation-crosslinked, double-insulated single-core copper cable purpose-built for PV, with excellent weathering resistance.</span></td></tr>
+<tr data-abbr="PE" data-cn="保护接地"><td class="col-abbr">PE</td><td class="col en-col">Protective Earth</td><td class="col cn-col">保护接地</td><td class="col-desc"><span data-lang-zh>电气系统中的安全保护导线，用于将设备金属外壳接地，防止触电。</span><span data-lang-en>Safety conductor in electrical systems that connects equipment metallic enclosures to earth to prevent electric shock.</span></td></tr>
+<tr data-abbr="Bonding" data-cn="等电位联结 / 接地连接"><td class="col-abbr">Bonding</td><td class="col en-col"></td><td class="col cn-col">等电位联结 / 接地连接</td><td class="col-desc"><span data-lang-zh>将电气系统中所有裸露的金属部件（如支架、机箱）通过导线连接在一起并接地，确保电位相等，保障安全。</span><span data-lang-en>Connecting all exposed metallic parts (frames, enclosures) together and to earth to maintain equal potential for safety.</span></td></tr>
+<tr data-abbr="EEA" data-cn="设备接地装置"><td class="col-abbr">EEA</td><td class="col en-col">Equipment Earthing Arrangement</td><td class="col cn-col">设备接地装置</td><td class="col-desc"><span data-lang-zh>设备接地的具体实施方案和架构。</span><span data-lang-en>Specific implementation scheme and architecture for equipment earthing.</span></td></tr>
+<tr data-abbr="AWG" data-cn="美国线规"><td class="col-abbr">AWG</td><td class="col en-col">American Wire Gauge</td><td class="col cn-col">美国线规</td><td class="col-desc"><span data-lang-zh>北美通用的导线直径标准，数字越小线径越粗。光伏系统常用10~14 AWG线缆。</span><span data-lang-en>North American wire size standard; smaller numbers indicate thicker conductors. PV systems typically use 10–14 AWG.</span></td></tr>
+<tr data-abbr="Busbar" data-cn="母线/汇流排"><td class="col-abbr">Busbar</td><td class="col en-col"></td><td class="col cn-col">母线/汇流排</td><td class="col-desc"><span data-lang-zh>由铜或铝制成的导体条，用于汇集和分配电能，常见于配电柜和汇流箱中。</span><span data-lang-en>Copper or aluminium conductor bar for collecting and distributing power, common in distribution boards and combiner boxes.</span></td></tr>
+<tr data-abbr="Combiner Box" data-cn="汇流箱"><td class="col-abbr">Combiner Box</td><td class="col en-col"></td><td class="col cn-col">汇流箱</td><td class="col-desc"><span data-lang-zh>将多个光伏组串并联汇合的光伏专用设备，内置熔断器、断路器和防雷保护。</span><span data-lang-en>Dedicated PV enclosure that combines multiple strings in parallel, housing fuses, breakers and surge protection.</span></td></tr>
+<tr data-abbr="Disconnect Switch" data-cn="隔离开关"><td class="col-abbr">Disconnect Switch</td><td class="col en-col"></td><td class="col cn-col">隔离开关</td><td class="col-desc"><span data-lang-zh>用于在维修或紧急情况下，将光伏系统各部分与电源进行可见分离的安全断开设备。</span><span data-lang-en>Safety device providing visible isolation of PV system sections from power sources for maintenance or emergencies.</span></td></tr>
+<tr data-abbr="Cable Tray" data-cn="电缆桥架"><td class="col-abbr">Cable Tray</td><td class="col en-col"></td><td class="col cn-col">电缆桥架</td><td class="col-desc"><span data-lang-zh>支撑和保护电缆的金属或非金属结构，确保线缆敷设整齐、散热良好。</span><span data-lang-en>Metallic or non-metallic structure supporting and protecting cables for neat routing and heat dissipation.</span></td></tr>
+<tr data-abbr="Wire Gland" data-cn="电缆防水接头"><td class="col-abbr">Wire Gland</td><td class="col en-col"></td><td class="col cn-col">电缆防水接头</td><td class="col-desc"><span data-lang-zh>用于电缆进出接线盒/配电柜时的密封和应力消除装置，确保防水防尘等级。</span><span data-lang-en>Sealing and strain-relief device at cable entries to junction boxes/panels, maintaining IP rating.</span></td></tr></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="section" id="sec-5">
+    <div class="section-header">
+      <div class="section-number">05</div>
+      <div class="section-title">
+        <h3><span data-lang-zh>并网、系统与政策类</span><span data-lang-en>Grid-tie, Systems & Policy</span></h3>
+        <div class="en-title"><span data-lang-zh>Grid-tie, Systems & Policy</span></div>
+      </div>
+    </div>
+    <div class="section-desc"><span data-lang-zh>涉及光伏系统如何接入公共电网、系统设计以及项目经济性评估的相关术语。</span><span data-lang-en>Terms related to grid interconnection, system design and project economic evaluation.</span></div>
+    <div class="table-wrapper">
+      <table>
+        <thead><tr><th>缩写</th><th class="en-col">英文全称</th><th class="cn-col">中文名称</th><th>简要解释</th></tr></thead>
+        <tbody><tr data-abbr="On-grid" data-cn="并网系统"><td class="col-abbr">On-grid</td><td class="col en-col"></td><td class="col cn-col">并网系统</td><td class="col-desc"><span data-lang-zh>连接到公共电网的光伏系统，多余的电力可以输送给电网，不足时从电网获取。</span><span data-lang-en>PV system connected to the utility grid, exporting surplus power and importing when generation is insufficient.</span></td></tr>
+<tr data-abbr="Off-grid" data-cn="离网系统"><td class="col-abbr">Off-grid</td><td class="col en-col"></td><td class="col cn-col">离网系统</td><td class="col-desc"><span data-lang-zh>不连接公共电网的独立光伏系统，通常配备蓄电池，自给自足。</span><span data-lang-en>Standalone PV system not connected to the utility grid, typically with battery storage for self-sufficiency.</span></td></tr>
+<tr data-abbr="Hybrid System" data-cn="混合系统"><td class="col-abbr">Hybrid System</td><td class="col en-col"></td><td class="col cn-col">混合系统</td><td class="col-desc"><span data-lang-zh>既连接电网又配备电池储能的系统，可实现自发自用、峰谷套利等功能。</span><span data-lang-en>System with both grid connection and battery storage, enabling self-consumption, peak shaving and arbitrage.</span></td></tr>
+<tr data-abbr="Net Metering" data-cn="净计量电价 / 反送奖励"><td class="col-abbr">Net Metering</td><td class="col en-col"></td><td class="col cn-col">净计量电价 / 反送奖励</td><td class="col-desc"><span data-lang-zh>一种计费政策，允许用户将多余的光伏电力反送电网，并在账单中抵扣从电网取用的电量。</span><span data-lang-en>Billing mechanism allowing users to offset grid consumption with exported PV electricity on their utility bill.</span></td></tr>
+<tr data-abbr="Feed-in Tariff (FiT)" data-cn="上网电价补贴"><td class="col-abbr">Feed-in Tariff (FiT)</td><td class="col en-col"></td><td class="col cn-col">上网电价补贴</td><td class="col-desc"><span data-lang-zh>政策制定的、电网公司必须购买光伏电力的保证价格，通常高于零售电价。</span><span data-lang-en>Policy-mandated guaranteed price at which the grid must purchase PV electricity, typically above retail rates.</span></td></tr>
+<tr data-abbr="Anti-islanding" data-cn="防孤岛保护"><td class="col-abbr">Anti-islanding</td><td class="col en-col"></td><td class="col cn-col">防孤岛保护</td><td class="col-desc"><span data-lang-zh>并网逆变器的安全功能。当电网断电时，逆变器必须迅速停止向电网送电，以保障线路维修人员安全。</span><span data-lang-en>Safety function of grid-tied inverters: rapid disconnection upon grid outage to protect line workers.</span></td></tr>
+<tr data-abbr="BOS" data-cn="系统平衡部件"><td class="col-abbr">BOS</td><td class="col en-col">Balance of System</td><td class="col cn-col">系统平衡部件</td><td class="col-desc"><span data-lang-zh>除光伏组件和逆变器之外，光伏系统的所有其他部件，如支架、线缆、汇流箱、配电柜等。</span><span data-lang-en>All PV system components other than modules and inverters: mounting, cabling, combiner boxes, switchgear, etc.</span></td></tr>
+<tr data-abbr="EPC" data-cn="工程总承包"><td class="col-abbr">EPC</td><td class="col en-col">Engineering, Procurement, and Construction</td><td class="col cn-col">工程总承包</td><td class="col-desc"><span data-lang-zh>指公司受业主委托，按照合同约定对工程建设项目的设计、采购、施工、试运行等实行全过程或若干阶段的承包。</span><span data-lang-en>Contracting model where a company undertakes design, procurement, construction and commissioning for the project owner.</span></td></tr>
+<tr data-abbr="O&M" data-cn="运行与维护"><td class="col-abbr">O&M</td><td class="col en-col">Operation and Maintenance</td><td class="col cn-col">运行与维护</td><td class="col-desc"><span data-lang-zh>光伏电站建成后的日常运营、巡检、清洁和维修工作。</span><span data-lang-en>Day-to-day operation, inspection, cleaning and repair after plant commissioning.</span></td></tr>
+<tr data-abbr="PR" data-cn="性能比"><td class="col-abbr">PR</td><td class="col en-col">Performance Ratio</td><td class="col cn-col">性能比</td><td class="col-desc"><span data-lang-zh>衡量光伏电站实际发电效率的最重要指标，PR=实际发电量/理论发电量，通常为75%~85%。</span><span data-lang-en>Key metric of PV plant efficiency: PR = actual yield / theoretical yield; typically 75%–85%.</span></td></tr>
+<tr data-abbr="CUF" data-cn="容量利用率"><td class="col-abbr">CUF</td><td class="col en-col">Capacity Utilization Factor</td><td class="col cn-col">容量利用率</td><td class="col-desc"><span data-lang-zh>电站实际年发电量与全年按额定功率连续运行的理论发电量之比，反映设备利用水平。</span><span data-lang-en>Ratio of actual annual generation to theoretical continuous full-power output over a year; reflects utilization level.</span></td></tr>
+<tr data-abbr="Grid Parity" data-cn="电网平价"><td class="col-abbr">Grid Parity</td><td class="col en-col"></td><td class="col cn-col">电网平价</td><td class="col-desc"><span data-lang-zh>光伏发电成本下降至与常规能源上网电价持平或更低的临界点，意味着光伏可实现无补贴竞争。</span><span data-lang-en>The point where PV electricity cost equals or drops below conventional grid electricity price, achieving subsidy-free competitiveness.</span></td></tr>
+<tr data-abbr="Interconnection" data-cn="并网接入/互联"><td class="col-abbr">Interconnection</td><td class="col en-col"></td><td class="col cn-col">并网接入/互联</td><td class="col-desc"><span data-lang-zh>光伏系统与电网之间的物理和电气连接，需满足电网运营商的技术要求和标准。</span><span data-lang-en>Physical and electrical connection of the PV system to the grid, meeting utility technical requirements and standards.</span></td></tr>
+<tr data-abbr="Availability" data-cn="可用率"><td class="col-abbr">Availability</td><td class="col en-col"></td><td class="col cn-col">可用率</td><td class="col-desc"><span data-lang-zh>发电设备处于可运行状态的时间占比，目标通常>99%，是运维质量的核心KPI。</span><span data-lang-en>Proportion of time generating equipment is operational; typically targeted >99%, a core O&M quality KPI.</span></td></tr>
+<tr data-abbr="Soiling Loss" data-cn="灰尘损失"><td class="col-abbr">Soiling Loss</td><td class="col en-col"></td><td class="col cn-col">灰尘损失</td><td class="col-desc"><span data-lang-zh>组件表面灰尘、污垢导致的发电量损失。严重积灰可造成5%~25%的发电损失，需定期清洗。</span><span data-lang-en>Generation loss due to dust and dirt on module surfaces; severe soiling can cause 5%–25% loss, requiring regular cleaning.</span></td></tr>
+<tr data-abbr="Mismatch Loss" data-cn="失配损失"><td class="col-abbr">Mismatch Loss</td><td class="col en-col"></td><td class="col cn-col">失配损失</td><td class="col-desc"><span data-lang-zh>因组件性能差异、阴影遮挡或朝向不同导致的组串/阵列发电量损失。</span><span data-lang-en>Generation loss in strings/arrays due to module performance variance, shading or orientation differences.</span></td></tr>
+<tr data-abbr="Cable Loss" data-cn="线损"><td class="col-abbr">Cable Loss</td><td class="col en-col"></td><td class="col cn-col">线损</td><td class="col-desc"><span data-lang-zh>电流在光伏系统直流/交流线缆中传输时的功率损耗（I²R损耗），设计时通常控制在1%以内。</span><span data-lang-en>Power loss (I²R) in DC and AC cabling; typically designed to be kept under 1%.</span></td></tr>
+<tr data-abbr="Transformer Loss" data-cn="变压器损耗"><td class="col-abbr">Transformer Loss</td><td class="col en-col"></td><td class="col cn-col">变压器损耗</td><td class="col-desc"><span data-lang-zh>升压变压器中的铁损（空载）和铜损（负载）损耗，影响电站整体效率。</span><span data-lang-en>Core (no-load) and copper (load) losses in step-up transformers, impacting overall plant efficiency.</span></td></tr></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="section" id="sec-6">
+    <div class="section-header">
+      <div class="section-number">06</div>
+      <div class="section-title">
+        <h3><span data-lang-zh>经济性与项目评估类</span><span data-lang-en>Economics & Project Evaluation</span></h3>
+        <div class="en-title"><span data-lang-zh>Economics & Project Evaluation</span></div>
+      </div>
+    </div>
+    <div class="section-desc"><span data-lang-zh>用于评估光伏项目投资价值和经济可行性的关键财务指标。</span><span data-lang-en>Key financial metrics for evaluating the investment value and economic viability of PV projects.</span></div>
+    <div class="table-wrapper">
+      <table>
+        <thead><tr><th>缩写</th><th class="en-col">英文全称</th><th class="cn-col">中文名称</th><th>简要解释</th></tr></thead>
+        <tbody><tr data-abbr="IRR" data-cn="内部收益率"><td class="col-abbr">IRR</td><td class="col en-col">Internal Rate of Return</td><td class="col cn-col">内部收益率</td><td class="col-desc"><span data-lang-zh>项目投资实际可望达到的收益率，是使项目净现值等于零时的折现率。IRR越高，项目吸引力越大。</span><span data-lang-en>The discount rate at which the project's net present value equals zero; higher IRR indicates greater investment attractiveness.</span></td></tr>
+<tr data-abbr="LCOE" data-cn="平准化度电成本"><td class="col-abbr">LCOE</td><td class="col en-col">Levelized Cost of Energy</td><td class="col cn-col">平准化度电成本</td><td class="col-desc"><span data-lang-zh>光伏系统在生命周期内所有成本和发电量折算后，平均每度电的发电成本。</span><span data-lang-en>Average cost per unit of electricity over the system's lifetime, considering all costs and total generation.</span></td></tr>
+<tr data-abbr="NPV" data-cn="净现值"><td class="col-abbr">NPV</td><td class="col en-col">Net Present Value</td><td class="col cn-col">净现值</td><td class="col-desc"><span data-lang-zh>项目未来所有现金流（收入和支出）折算成今天的价值后的净值。NPV > 0 通常意味着项目可行。</span><span data-lang-en>Sum of all future project cash flows discounted to present value; NPV > 0 typically means the project is viable.</span></td></tr>
+<tr data-abbr="ROI" data-cn="投资回报率"><td class="col-abbr">ROI</td><td class="col en-col">Return on Investment</td><td class="col cn-col">投资回报率</td><td class="col-desc"><span data-lang-zh>衡量投资效率的指标，通常表示为（投资收益 - 投资成本）/ 投资成本。</span><span data-lang-en>Efficiency metric typically expressed as (gain from investment – investment cost) / investment cost.</span></td></tr>
+<tr data-abbr="Payback Period" data-cn="投资回收期"><td class="col-abbr">Payback Period</td><td class="col en-col"></td><td class="col cn-col">投资回收期</td><td class="col-desc"><span data-lang-zh>收回全部初始投资成本所需的时间，通常以年为单位。</span><span data-lang-en>Time required to recoup the entire initial investment, typically measured in years.</span></td></tr>
+<tr data-abbr="PPA" data-cn="购电协议"><td class="col-abbr">PPA</td><td class="col en-col">Power Purchase Agreement</td><td class="col cn-col">购电协议</td><td class="col-desc"><span data-lang-zh>光伏电力买卖双方签订的长协，约定了电力的销售价格和期限。</span><span data-lang-en>Long-term contract between electricity buyer and PV power seller, specifying price and duration.</span></td></tr>
+<tr data-abbr="Capacity Factor" data-cn="容量系数 / 利用小时数系数"><td class="col-abbr">Capacity Factor</td><td class="col en-col"></td><td class="col cn-col">容量系数 / 利用小时数系数</td><td class="col-desc"><span data-lang-zh>一段时间内（通常为一年）实际发电量与理论最大发电量（额定功率 × 时间）的比值。</span><span data-lang-en>Ratio of actual generation to theoretical maximum generation (rated power × time) over a period, typically one year.</span></td></tr>
+<tr data-abbr="Degradation Rate" data-cn="衰减率"><td class="col-abbr">Degradation Rate</td><td class="col en-col"></td><td class="col cn-col">衰减率</td><td class="col-desc"><span data-lang-zh>光伏组件或系统每年功率下降的比例。主流组件首年<3%，之后每年约0.5%~0.7%。</span><span data-lang-en>Annual power decline rate; mainstream modules degrade <3% in the first year, then ~0.5%–0.7% per year.</span></td></tr>
+<tr data-abbr="CAPEX" data-cn="资本支出 / 初始投资"><td class="col-abbr">CAPEX</td><td class="col en-col">Capital Expenditure</td><td class="col cn-col">资本支出 / 初始投资</td><td class="col-desc"><span data-lang-zh>光伏项目建设阶段的总投资成本，包括设备采购、安装施工、并网等费用。</span><span data-lang-en>Total upfront investment for PV project construction, including equipment, installation, and grid connection.</span></td></tr>
+<tr data-abbr="OPEX" data-cn="运营支出"><td class="col-abbr">OPEX</td><td class="col en-col">Operational Expenditure</td><td class="col cn-col">运营支出</td><td class="col-desc"><span data-lang-zh>光伏电站运行期间的持续费用，包括运维人工、清洗、保险、土地租金等。</span><span data-lang-en>Ongoing operational costs including maintenance labor, cleaning, insurance and land lease.</span></td></tr>
+<tr data-abbr="DSCR" data-cn="偿债备付率"><td class="col-abbr">DSCR</td><td class="col en-col">Debt Service Coverage Ratio</td><td class="col cn-col">偿债备付率</td><td class="col-desc"><span data-lang-zh>项目可用于还本付息的现金流与当期还本付息总额的比值，银行融资的关键指标（通常要求>1.2）。</span><span data-lang-en>Cash flow available for debt service divided by total debt service obligation; key bankability metric typically requiring >1.2.</span></td></tr></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="section" id="sec-7">
+    <div class="section-header">
+      <div class="section-number">07</div>
+      <div class="section-title">
+        <h3><span data-lang-zh>安全与安装规范类</span><span data-lang-en>Safety & Installation Codes</span></h3>
+        <div class="en-title"><span data-lang-zh>Safety & Installation Codes</span></div>
+      </div>
+    </div>
+    <div class="section-desc"><span data-lang-zh>在安装和运维过程中必须遵守的安全准则和硬件规范。</span><span data-lang-en>Safety guidelines and hardware standards that must be observed during installation and O&M.</span></div>
+    <div class="table-wrapper">
+      <table>
+        <thead><tr><th>缩写</th><th class="en-col">英文全称</th><th class="cn-col">中文名称</th><th>简要解释</th></tr></thead>
+        <tbody><tr data-abbr="IP Rating" data-cn="防护等级"><td class="col-abbr">IP Rating</td><td class="col en-col">Ingress Protection Rating</td><td class="col cn-col">防护等级</td><td class="col-desc"><span data-lang-zh>定义外壳对防尘、防水密封有效性的国际标准（如IP65）。第一位数字防固体，第二位数字防水。</span><span data-lang-en>International standard defining enclosure sealing effectiveness against dust and water (e.g. IP65); first digit = solids, second = water.</span></td></tr>
+<tr data-abbr="Arc Fault" data-cn="电弧故障"><td class="col-abbr">Arc Fault</td><td class="col en-col"></td><td class="col cn-col">电弧故障</td><td class="col-desc"><span data-lang-zh>由于线路老化、绝缘破损或连接松动导致电流绕过正常负载产生的火花，是电气火灾的主要诱因。</span><span data-lang-en>Spark caused by current bypassing normal load paths due to aged wiring, insulation damage or loose connections; a major electrical fire cause.</span></td></tr>
+<tr data-abbr="AFCI" data-cn="电弧故障断路器"><td class="col-abbr">AFCI</td><td class="col en-col">Arc Fault Circuit Interrupter</td><td class="col cn-col">电弧故障断路器</td><td class="col-desc"><span data-lang-zh>能够检测并切断电路中的危险电弧的设备，许多国家/地区已强制要求光伏系统具备此功能。</span><span data-lang-en>Device that detects and interrupts dangerous arc faults; now mandatory for PV systems in many jurisdictions.</span></td></tr>
+<tr data-abbr="Rapid Shutdown" data-cn="快速关断"><td class="col-abbr">Rapid Shutdown</td><td class="col en-col"></td><td class="col cn-col">快速关断</td><td class="col-desc"><span data-lang-zh>一种安全功能，允许在紧急情况下（如火灾）迅速将光伏系统各部分的直流电压降低到安全水平（通常为80V以下）。</span><span data-lang-en>Safety function reducing DC voltage in PV system sections to safe levels (typically below 80V) during emergencies such as fires.</span></td></tr>
+<tr data-abbr="NEC" data-cn="国家电气规范"><td class="col-abbr">NEC</td><td class="col en-col">National Electrical Code</td><td class="col cn-col">国家电气规范</td><td class="col-desc"><span data-lang-zh>美国及许多其他地区广泛采用的电气安装安全标准，其中包含针对光伏系统的特定条款（如NEC 690, NEC 705）。</span><span data-lang-en>Widely adopted US electrical safety standard with specific articles for PV systems (e.g. NEC 690, NEC 705).</span></td></tr>
+<tr data-abbr="IEC" data-cn="国际电工委员会"><td class="col-abbr">IEC</td><td class="col en-col">International Electrotechnical Commission</td><td class="col cn-col">国际电工委员会</td><td class="col-desc"><span data-lang-zh>制定包括光伏产品安全标准（如IEC 61730, IEC 62109）在内的全球电气国际标准。</span><span data-lang-en>Global organization publishing international electrical standards including PV product safety (e.g. IEC 61730, IEC 62109).</span></td></tr>
+<tr data-abbr="UL" data-cn="美国保险商实验室"><td class="col-abbr">UL</td><td class="col en-col">Underwriters Laboratories</td><td class="col cn-col">美国保险商实验室</td><td class="col-desc"><span data-lang-zh>全球知名的安全科学组织，其认证（如UL 1703, UL 1741）是北美市场光伏产品进入的强制要求。</span><span data-lang-en>Global safety science organization; certifications (e.g. UL 1703, UL 1741) are mandatory for PV products entering the North American market.</span></td></tr>
+<tr data-abbr="Ground Fault" data-cn="接地故障"><td class="col-abbr">Ground Fault</td><td class="col en-col"></td><td class="col cn-col">接地故障</td><td class="col-desc"><span data-lang-zh>带电导体与地或接地部件之间的非正常连接，可能引发电击或火灾。光伏系统须配备接地故障检测。</span><span data-lang-en>Unintended connection between a live conductor and earth/grounded parts, risking electric shock or fire; PV systems require detection.</span></td></tr>
+<tr data-abbr="GFCI" data-cn="接地故障电路断路器"><td class="col-abbr">GFCI</td><td class="col en-col">Ground Fault Circuit Interrupter</td><td class="col cn-col">接地故障电路断路器</td><td class="col-desc"><span data-lang-zh>检测到微小接地漏电流时迅速切断电路的装置，是防触电保护的重要手段。</span><span data-lang-en>Device rapidly interrupting circuits when small ground-fault leakage currents are detected; a key electric shock protection measure.</span></td></tr>
+<tr data-abbr="Arc Flash" data-cn="电弧闪光"><td class="col-abbr">Arc Flash</td><td class="col en-col"></td><td class="col cn-col">电弧闪光</td><td class="col-desc"><span data-lang-zh>电气故障时产生的极高温度电弧等离子体，可在瞬间造成严重烧伤和设备损坏。</span><span data-lang-en>Extreme-temperature arc plasma generated during electrical faults, capable of causing severe burns and equipment damage in an instant.</span></td></tr>
+<tr data-abbr="Lockout/Tagout (LOTO)" data-cn="上锁挂牌"><td class="col-abbr">Lockout/Tagout (LOTO)</td><td class="col en-col"></td><td class="col cn-col">上锁挂牌</td><td class="col-desc"><span data-lang-zh>在设备维护时为防止意外启动而执行的物理锁定和警示挂牌程序，是电气安全基本操作。</span><span data-lang-en>Safety procedure using physical locks and warning tags to prevent accidental equipment startup during maintenance.</span></td></tr>
+<tr data-abbr="PPE" data-cn="个人防护装备"><td class="col-abbr">PPE</td><td class="col en-col">Personal Protective Equipment</td><td class="col cn-col">个人防护装备</td><td class="col-desc"><span data-lang-zh>保护作业人员免受电气、机械、化学等危害的装备，包括绝缘手套、面罩、安全鞋等。</span><span data-lang-en>Equipment protecting workers from electrical, mechanical and chemical hazards, including insulated gloves, face shields and safety shoes.</span></td></tr>
+<tr data-abbr="Hazardous Area" data-cn="危险区域"><td class="col-abbr">Hazardous Area</td><td class="col en-col"></td><td class="col cn-col">危险区域</td><td class="col-desc"><span data-lang-zh>存在爆炸性或可燃性气体、粉尘的环境区域，光伏设备需满足相应的防爆等级要求。</span><span data-lang-en>Area where explosive or flammable gases/dusts may be present; PV equipment must meet corresponding explosion-proof rating.</span></td></tr></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="section" id="sec-8">
+    <div class="section-header">
+      <div class="section-number">08</div>
+      <div class="section-title">
+        <h3><span data-lang-zh>储能系统类</span><span data-lang-en>Energy Storage Systems</span></h3>
+        <div class="en-title"><span data-lang-zh>Energy Storage Systems</span></div>
+      </div>
+    </div>
+    <div class="section-desc"><span data-lang-zh>涉及光伏电站配套的电池储能及能量管理系统的核心术语。</span><span data-lang-en>Core terminology for battery energy storage and energy management systems paired with PV plants.</span></div>
+    <div class="table-wrapper">
+      <table>
+        <thead><tr><th>缩写</th><th class="en-col">英文全称</th><th class="cn-col">中文名称</th><th>简要解释</th></tr></thead>
+        <tbody><tr data-abbr="BMS" data-cn="电池管理系统"><td class="col-abbr">BMS</td><td class="col en-col">Battery Management System</td><td class="col cn-col">电池管理系统</td><td class="col-desc"><span data-lang-zh>监测和管理电池组充放电状态、温度、电压的电子系统，是电池安全运行的核心保障。</span><span data-lang-en>Electronic system monitoring and managing battery pack charge/discharge, temperature and voltage; core to battery safety.</span></td></tr>
+<tr data-abbr="SOC" data-cn="荷电状态"><td class="col-abbr">SOC</td><td class="col en-col">State of Charge</td><td class="col cn-col">荷电状态</td><td class="col-desc"><span data-lang-zh>电池当前剩余电量与额定容量的百分比，范围0%~100%，类似于汽车的油表。</span><span data-lang-en>Percentage of remaining charge relative to rated capacity (0%–100%), analogous to a fuel gauge.</span></td></tr>
+<tr data-abbr="SOH" data-cn="健康状态"><td class="col-abbr">SOH</td><td class="col en-col">State of Health</td><td class="col cn-col">健康状态</td><td class="col-desc"><span data-lang-zh>电池当前可用容量与新电池额定容量的比值，反映电池老化程度。通常SOH<80%时视为寿命终止。</span><span data-lang-en>Current usable capacity vs. rated new capacity, reflecting aging; typically end-of-life at SOH < 80%.</span></td></tr>
+<tr data-abbr="DOD" data-cn="放电深度"><td class="col-abbr">DOD</td><td class="col en-col">Depth of Discharge</td><td class="col cn-col">放电深度</td><td class="col-desc"><span data-lang-zh>电池已放出的电量与额定容量的百分比。DOD越大，电池循环寿命越短。</span><span data-lang-en>Percentage of rated capacity discharged; deeper DOD shortens cycle life.</span></td></tr>
+<tr data-abbr="LFP / LiFePO₄" data-cn="磷酸铁锂电池"><td class="col-abbr">LFP / LiFePO₄</td><td class="col en-col">Lithium Iron Phosphate</td><td class="col cn-col">磷酸铁锂电池</td><td class="col-desc"><span data-lang-zh>以磷酸铁锂为正极材料的锂离子电池，具有安全性高、循环寿命长的优点，是光伏储能主流。</span><span data-lang-en>Lithium-ion battery with lithium iron phosphate cathode; high safety and long cycle life; mainstream for PV storage.</span></td></tr>
+<tr data-abbr="NMC" data-cn="三元锂电池"><td class="col-abbr">NMC</td><td class="col en-col">Nickel Manganese Cobalt</td><td class="col cn-col">三元锂电池</td><td class="col-desc"><span data-lang-zh>以镍钴锰为正极材料的锂离子电池，能量密度高于LFP，但热稳定性和寿命略逊。</span><span data-lang-en>Lithium-ion battery with nickel-manganese-cobalt cathode; higher energy density than LFP, but lower thermal stability and lifespan.</span></td></tr>
+<tr data-abbr="PCS" data-cn="储能变流器/电力转换系统"><td class="col-abbr">PCS</td><td class="col en-col">Power Conversion System</td><td class="col cn-col">储能变流器/电力转换系统</td><td class="col-desc"><span data-lang-zh>控制电池充放电、实现AC/DC双向转换的电力电子装置，是储能系统的核心功率设备。</span><span data-lang-en>Power electronics controlling battery charging/discharging with bidirectional AC/DC conversion; core power component of storage systems.</span></td></tr>
+<tr data-abbr="EMS" data-cn="能量管理系统"><td class="col-abbr">EMS</td><td class="col en-col">Energy Management System</td><td class="col cn-col">能量管理系统</td><td class="col-desc"><span data-lang-zh>对光伏、储能、负载和电网进行统一调度和优化控制的智能系统，实现收益最大化和能效最优。</span><span data-lang-en>Intelligent system dispatching and optimizing PV, storage, load and grid resources for maximum revenue and energy efficiency.</span></td></tr>
+<tr data-abbr="Cycle Life" data-cn="循环寿命"><td class="col-abbr">Cycle Life</td><td class="col en-col"></td><td class="col cn-col">循环寿命</td><td class="col-desc"><span data-lang-zh>电池在容量衰减至额定值的80%之前所能完成的充放电循环次数。</span><span data-lang-en>Number of complete charge/discharge cycles before battery capacity drops to 80% of rated value.</span></td></tr>
+<tr data-abbr="Round-trip Efficiency" data-cn="充放电往返效率"><td class="col-abbr">Round-trip Efficiency</td><td class="col en-col"></td><td class="col cn-col">充放电往返效率</td><td class="col-desc"><span data-lang-zh>电池放出的能量与充入的能量的比值，一般在90%~95%之间。</span><span data-lang-en>Ratio of energy discharged to energy charged, typically 90%–95%.</span></td></tr>
+<tr data-abbr="C-rate" data-cn="充放电倍率"><td class="col-abbr">C-rate</td><td class="col en-col"></td><td class="col cn-col">充放电倍率</td><td class="col-desc"><span data-lang-zh>衡量电池充放电电流大小的指标。1C表示1小时将电池完全充满或放空的电流强度。</span><span data-lang-en>Measure of charge/discharge current relative to battery capacity; 1C means the current that would fully charge or discharge in 1 hour.</span></td></tr>
+<tr data-abbr="ESS" data-cn="储能系统"><td class="col-abbr">ESS</td><td class="col en-col">Energy Storage System</td><td class="col cn-col">储能系统</td><td class="col-desc"><span data-lang-zh>由电池组、PCS、BMS、EMS等组成的完整储能设备/系统，用于调峰填谷、备用电源等。</span><span data-lang-en>Complete storage equipment/system comprising battery packs, PCS, BMS, EMS, etc., for peak shaving, backup power and more.</span></td></tr>
+<tr data-abbr="Self-discharge" data-cn="自放电"><td class="col-abbr">Self-discharge</td><td class="col en-col"></td><td class="col cn-col">自放电</td><td class="col-desc"><span data-lang-zh>电池在未使用状态下自然损失电量的现象，以每月百分比衡量。锂电池自放电率通常<3%/月。</span><span data-lang-en>Natural loss of charge when battery is idle, measured as monthly percentage; lithium batteries typically <3% per month.</span></td></tr>
+<tr data-abbr="Thermal Runaway" data-cn="热失控"><td class="col-abbr">Thermal Runaway</td><td class="col en-col"></td><td class="col cn-col">热失控</td><td class="col-desc"><span data-lang-zh>电池内部因过热引发的不可控连锁反应，可能导致起火或爆炸。BMS的核心防护目标。</span><span data-lang-en>Uncontrolled chain reaction triggered by internal overheating, potentially leading to fire or explosion; primary protection target of BMS.</span></td></tr></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="section" id="sec-9">
+    <div class="section-header">
+      <div class="section-number">09</div>
+      <div class="section-title">
+        <h3><span data-lang-zh>电站监控与环境监测类</span><span data-lang-en>Plant Monitoring & Environmental Sensing</span></h3>
+        <div class="en-title"><span data-lang-zh>Plant Monitoring & Environmental Sensing</span></div>
+      </div>
+    </div>
+    <div class="section-desc"><span data-lang-zh>涉及光伏电站运行状态监测、环境数据采集及智能化运维的相关术语。</span><span data-lang-en>Terms for PV plant operational monitoring, environmental data acquisition and intelligent O&M.</span></div>
+    <div class="table-wrapper">
+      <table>
+        <thead><tr><th>缩写</th><th class="en-col">英文全称</th><th class="cn-col">中文名称</th><th>简要解释</th></tr></thead>
+        <tbody><tr data-abbr="Data Logger" data-cn="数据记录器/数采仪"><td class="col-abbr">Data Logger</td><td class="col en-col"></td><td class="col cn-col">数据记录器/数采仪</td><td class="col-desc"><span data-lang-zh>采集和记录光伏电站各类运行数据（发电量、功率、气象等）的硬件设备，支持远程传输。</span><span data-lang-en>Hardware device collecting and recording plant operational data (generation, power, weather, etc.) with remote transmission capability.</span></td></tr>
+<tr data-abbr="Weather Station" data-cn="气象站"><td class="col-abbr">Weather Station</td><td class="col en-col"></td><td class="col cn-col">气象站</td><td class="col-desc"><span data-lang-zh>安装在光伏电站现场，用于测量辐照度、温度、风速风向等环境参数的设备集合。</span><span data-lang-en>On-site equipment suite measuring environmental parameters including irradiance, temperature, wind speed and direction.</span></td></tr>
+<tr data-abbr="Pyranometer" data-cn="总辐射表/日照强度计"><td class="col-abbr">Pyranometer</td><td class="col en-col"></td><td class="col cn-col">总辐射表/日照强度计</td><td class="col-desc"><span data-lang-zh>测量水平面太阳总辐射的高精度仪器，是评估光伏电站发电性能的基础设备。</span><span data-lang-en>High-precision instrument measuring global solar irradiance on a horizontal plane; foundational for plant performance evaluation.</span></td></tr>
+<tr data-abbr="Soiling Ratio" data-cn="积灰比/污染比"><td class="col-abbr">Soiling Ratio</td><td class="col en-col"></td><td class="col cn-col">积灰比/污染比</td><td class="col-desc"><span data-lang-zh>因灰尘覆盖导致组件透光率下降的比例，是安排清洗周期的重要参考指标。</span><span data-lang-en>Ratio of transmittance loss due to dust coverage; a key metric for scheduling cleaning cycles.</span></td></tr>
+<tr data-abbr="Irradiance" data-cn="辐照度"><td class="col-abbr">Irradiance</td><td class="col en-col"></td><td class="col cn-col">辐照度</td><td class="col-desc"><span data-lang-zh>单位面积接收到的太阳辐射功率，单位W/m²。标准测试条件下为1000W/m²。</span><span data-lang-en>Solar radiation power received per unit area (W/m²); 1000 W/m² under standard test conditions.</span></td></tr>
+<tr data-abbr="Irradiation" data-cn="辐照量/日照量"><td class="col-abbr">Irradiation</td><td class="col en-col"></td><td class="col cn-col">辐照量/日照量</td><td class="col-desc"><span data-lang-zh>一段时间内的累计太阳辐射能量，单位kWh/m²，是光伏发电量估算的基础参数。</span><span data-lang-en>Cumulative solar radiation energy over a period (kWh/m²); fundamental for PV generation estimation.</span></td></tr>
+<tr data-abbr="I-V Curve" data-cn="I-V特性曲线"><td class="col-abbr">I-V Curve</td><td class="col en-col"></td><td class="col cn-col">I-V特性曲线</td><td class="col-desc"><span data-lang-zh>描述光伏组件/组串电压与电流关系的曲线，用于诊断组件性能衰减、热斑等故障。</span><span data-lang-en>Curve showing the current-voltage relationship of a module/string, used for diagnosing performance degradation, hot spots and other faults.</span></td></tr>
+<tr data-abbr="Fault Ride Through (FRT)" data-cn="故障穿越"><td class="col-abbr">Fault Ride Through (FRT)</td><td class="col en-col"></td><td class="col cn-col">故障穿越</td><td class="col-desc"><span data-lang-zh>电网发生短暂电压跌落或升高时，光伏逆变器保持并网运行、不脱网的能力。</span><span data-lang-en>Inverter capability to stay connected during short grid voltage dips or swells without disconnecting.</span></td></tr>
+<tr data-abbr="String Monitoring" data-cn="组串监测"><td class="col-abbr">String Monitoring</td><td class="col en-col"></td><td class="col cn-col">组串监测</td><td class="col-desc"><span data-lang-zh>实时检测每个光伏组串的电流、电压，快速定位异常组串的技术手段。</span><span data-lang-en>Real-time monitoring of current and voltage for each PV string to rapidly identify abnormal strings.</span></td></tr></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="section" id="sec-10">
+    <div class="section-header">
+      <div class="section-number">10</div>
+      <div class="section-title">
+        <h3><span data-lang-zh>标准与认证类</span><span data-lang-en>Standards & Certifications</span></h3>
+        <div class="en-title"><span data-lang-zh>Standards & Certifications</span></div>
+      </div>
+    </div>
+    <div class="section-desc"><span data-lang-zh>光伏及相关电气产品进入全球市场须遵循的国际标准、区域规范和认证体系。</span><span data-lang-en>International standards, regional codes and certification systems required for PV and related electrical products to enter global markets.</span></div>
+    <div class="table-wrapper">
+      <table>
+        <thead><tr><th>缩写</th><th class="en-col">英文全称</th><th class="cn-col">中文名称</th><th>简要解释</th></tr></thead>
+        <tbody><tr data-abbr="IEC 61215" data-cn="IEC 61215"><td class="col-abbr">IEC 61215</td><td class="col en-col">IEC 61215</td><td class="col cn-col">IEC 61215</td><td class="col-desc"><span data-lang-zh>国际电工委员会发布的地面用晶体硅光伏组件设计鉴定与定型标准，验证组件长期可靠性。</span><span data-lang-en>IEC standard for design qualification and type approval of terrestrial crystalline silicon PV modules; validates long-term reliability.</span></td></tr>
+<tr data-abbr="IEC 61730" data-cn="IEC 61730"><td class="col-abbr">IEC 61730</td><td class="col en-col">IEC 61730</td><td class="col cn-col">IEC 61730</td><td class="col-desc"><span data-lang-zh>光伏组件安全鉴定标准，涵盖电击、火灾、机械应力等安全风险评估。</span><span data-lang-en>PV module safety qualification standard covering electric shock, fire and mechanical stress risk assessment.</span></td></tr>
+<tr data-abbr="IEC 62109" data-cn="IEC 62109"><td class="col-abbr">IEC 62109</td><td class="col en-col">IEC 62109</td><td class="col cn-col">IEC 62109</td><td class="col-desc"><span data-lang-zh>光伏电力转换设备（逆变器）安全标准，规定电气、机械和环境安全要求。</span><span data-lang-en>Safety standard for PV power conversion equipment (inverters), specifying electrical, mechanical and environmental safety requirements.</span></td></tr>
+<tr data-abbr="UL 1703" data-cn="UL 1703"><td class="col-abbr">UL 1703</td><td class="col en-col">UL 1703</td><td class="col cn-col">UL 1703</td><td class="col-desc"><span data-lang-zh>美国保险商实验室发布的平板光伏组件安全标准，北美市场准入必备。</span><span data-lang-en>UL safety standard for flat-plate PV modules; mandatory for North American market access.</span></td></tr>
+<tr data-abbr="UL 1741" data-cn="UL 1741"><td class="col-abbr">UL 1741</td><td class="col en-col">UL 1741</td><td class="col cn-col">UL 1741</td><td class="col-desc"><span data-lang-zh>UL发布的逆变器、充电控制器等光伏电力转换设备标准，涵盖并网和离网应用。</span><span data-lang-en>UL standard for PV power conversion equipment including inverters and charge controllers, covering grid-tied and off-grid applications.</span></td></tr>
+<tr data-abbr="TÜV" data-cn="德国技术监督协会认证"><td class="col-abbr">TÜV</td><td class="col en-col">Technischer Überwachungsverein</td><td class="col cn-col">德国技术监督协会认证</td><td class="col-desc"><span data-lang-zh>德国权威的第三方检测认证机构，TÜV认证是欧洲市场光伏产品公认的品质和安全标志。</span><span data-lang-en>Authoritative German third-party testing and certification body; TÜV mark is a recognized quality/safety indicator for PV products in the European market.</span></td></tr>
+<tr data-abbr="CE" data-cn="欧盟CE认证"><td class="col-abbr">CE</td><td class="col en-col">Conformité Européenne</td><td class="col cn-col">欧盟CE认证</td><td class="col-desc"><span data-lang-zh>产品符合欧盟健康、安全和环保要求的强制性标志。光伏产品进入欧洲经济区必须加贴CE标志。</span><span data-lang-en>Mandatory marking indicating conformity with EU health, safety and environmental requirements; essential for PV products entering the EEA.</span></td></tr>
+<tr data-abbr="CQC" data-cn="中国质量认证中心"><td class="col-abbr">CQC</td><td class="col en-col">China Quality Certification Centre</td><td class="col cn-col">中国质量认证中心</td><td class="col-desc"><span data-lang-zh>中国国家级认证机构，提供光伏产品的自愿性产品认证（CQC标志认证）。</span><span data-lang-en>China's national certification body providing voluntary product certification (CQC mark) for PV products.</span></td></tr>
+<tr data-abbr="CGC" data-cn="北京鉴衡认证中心"><td class="col-abbr">CGC</td><td class="col en-col">China General Certification Centre</td><td class="col cn-col">北京鉴衡认证中心</td><td class="col-desc"><span data-lang-zh>中国可再生能源领域的专业认证机构，光伏产品金太阳认证的实施方。</span><span data-lang-en>China's specialized certification body for renewable energy; implementer of the Golden Sun PV product certification.</span></td></tr>
+<tr data-abbr="ETL" data-cn="ETL认证（美国）"><td class="col-abbr">ETL</td><td class="col en-col">Electrical Testing Laboratories</td><td class="col cn-col">ETL认证（美国）</td><td class="col-desc"><span data-lang-zh>与UL同级别的北美安全认证标志，由Intertek颁发。ETL列名产品被美国OSHA认可。</span><span data-lang-en>North American safety certification mark equivalent to UL, issued by Intertek; ETL-listed products are recognized by US OSHA.</span></td></tr>
+<tr data-abbr="CSA" data-cn="加拿大标准协会认证"><td class="col-abbr">CSA</td><td class="col en-col">Canadian Standards Association</td><td class="col cn-col">加拿大标准协会认证</td><td class="col-desc"><span data-lang-zh>加拿大权威标准制定与认证机构，CSA认证是光伏产品进入加拿大市场的必要门槛。</span><span data-lang-en>Authoritative Canadian standards and certification body; CSA certification is required for PV products entering the Canadian market.</span></td></tr>
+<tr data-abbr="RETIE" data-cn="哥伦比亚电气安装技术规范"><td class="col-abbr">RETIE</td><td class="col en-col">Reglamento Técnico de Instalaciones Eléctricas</td><td class="col cn-col">哥伦比亚电气安装技术规范</td><td class="col-desc"><span data-lang-zh>哥伦比亚的电气安装技术规范，适用于光伏系统安装的强制合规要求。</span><span data-lang-en>Colombian technical regulation for electrical installations; mandatory compliance requirement for PV system installations.</span></td></tr>
+<tr data-abbr="NRS" data-cn="南非国家规范标准"><td class="col-abbr">NRS</td><td class="col en-col">National Rationalised Specification</td><td class="col cn-col">南非国家规范标准</td><td class="col-desc"><span data-lang-zh>南非的电网并网规范，包括小型嵌入式发电（光伏系统）的并网技术要求。</span><span data-lang-en>South African grid code including technical requirements for grid connection of small-scale embedded generation (PV systems).</span></td></tr></tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="footnotes">
+    <p data-lang-zh>内容由AI生成，仅供参考 &nbsp;|&nbsp; MOOVED 电气光伏知识库 &nbsp;|&nbsp; 10 个分类 151 条术语</p>
+    <p data-lang-en>AI-generated content for reference &nbsp;|&nbsp; MOOVED Electrical & PV Knowledge Base &nbsp;|&nbsp; 10 Categories · 151 Terms</p>
+  </div>
+
+</div>
+</div>
+
+<!-- ==================== Tab 2: 知识文章 ==================== -->
+<div class="tab-content" id="tab-articles">
+<div class="container">
+
+  <div class="articles-toolbar">
+    <div class="search-input-wrap">
+      <span class="search-icon">&#x1F50D;</span>
+      <input type="text" class="search-input" id="articleSearchInput" placeholder="搜索文章标题、标签或内容…" autocomplete="off" data-placeholder-zh="搜索文章标题、标签或内容…" data-placeholder-en="Search article title, tags or content…">
+      <button class="search-clear" id="articleSearchClear" title="清除搜索">&times;</button>
+    </div>
+    <span class="search-count" id="articleCount">1 篇文章</span>
+    <div class="btn-add-wrap">
+      <button class="btn-add" id="btnAddArticle">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>
+        <span data-lang-zh>添加内容</span><span data-lang-en>Add Content</span>
+      </button>
+    </div>
+  </div>
+
+  <div id="articleList"></div>
+  <div class="articles-empty" id="articlesEmpty" style="display:none;">
+    <p data-lang-zh>暂无文章，点击右上角「添加内容」开始吧</p>
+    <p data-lang-en>No articles yet. Click "Add Content" to get started.</p>
+  </div>
+
+</div>
+</div>
+
+<!-- ==================== 弹窗 ==================== -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modalTitle"><span data-lang-zh>添加内容</span><span data-lang-en>Add Content</span></h3>
+      <button class="modal-close" id="modalClose">&times;</button>
+    </div>
+    <div class="modal-body">
+      <!-- 弹窗内 Tab -->
+      <div class="modal-tabs">
+        <button class="modal-tab active" data-mtab="url"><span data-lang-zh>粘贴链接</span><span data-lang-en>Paste URL</span></button>
+        <button class="modal-tab" data-mtab="article"><span data-lang-zh>手动添加文章</span><span data-lang-en>Manual Article</span></button>
+        <button class="modal-tab" data-mtab="term"><span data-lang-zh>手动添加术语</span><span data-lang-en>Manual Term</span></button>
+      </div>
+
+      <!-- URL 面板 -->
+      <div class="modal-panel active" id="panel-url">
+        <div class="modal-section">
+          <h4><span data-lang-zh>粘贴网页链接，智能拆解内容</span><span data-lang-en>Paste URL to scrape and parse</span></h4>
+          <input type="text" id="urlInput" placeholder="https://..." style="width:100%;padding:10px 14px;border:2px solid var(--border);border-radius:8px;font-size:0.9rem;outline:none;margin-bottom:12px;">
+          <button class="btn btn-primary" id="btnFetch">
+            <span data-lang-zh>抓取并解析</span><span data-lang-en>Fetch & Parse</span>
+          </button>
+          <span id="fetchStatus" style="margin-left:12px;font-size:0.85rem;color:var(--text-secondary);"></span>
+        </div>
+        <div class="modal-section" id="extractResult" style="display:none;">
+          <h4><span data-lang-zh>提取结果</span><span data-lang-en>Extraction Result</span></h4>
+          <div id="extractTerms"><p style="font-size:0.85rem;color:var(--text-secondary);"></p></div>
+          <div id="extractArticle" style="margin-top:12px;padding:10px 14px;background:#e8f5e9;border-radius:8px;font-size:0.85rem;display:none;"></div>
+          <div class="modal-actions" id="extractActions" style="display:none;">
+            <button class="btn btn-primary" id="btnAddExtractedTerms"><span data-lang-zh>添加选中的术语到词典</span><span data-lang-en>Add Selected to Dictionary</span></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 手动文章面板 -->
+      <div class="modal-panel" id="panel-article">
+        <div class="modal-section">
+          <h4><span data-lang-zh>手动添加知识文章</span><span data-lang-en>Add Article Manually</span></h4>
+          <div class="manual-form">
+            <input type="text" id="manArtTitle" placeholder="文章标题" class="full">
+            <input type="text" id="manArtUrl" placeholder="原文链接 URL">
+            <input type="text" id="manArtTags" placeholder="标签（逗号分隔）">
+            <textarea id="manArtContent" placeholder="正文内容（支持 Markdown）" class="full" style="min-height:150px;"></textarea>
+          </div>
+          <div class="modal-actions">
+            <button class="btn btn-primary" id="btnAddManArticle"><span data-lang-zh>保存文章</span><span data-lang-en>Save Article</span></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 手动术语面板 -->
+      <div class="modal-panel" id="panel-term">
+        <div class="modal-section">
+          <h4><span data-lang-zh>手动添加术语</span><span data-lang-en>Add Term Manually</span></h4>
+          <div class="manual-form">
+            <input type="text" id="manAbbr" placeholder="缩写 (如 NMC)">
+            <input type="text" id="manEn" placeholder="英文全称">
+            <input type="text" id="manCn" placeholder="中文名称">
+            <input type="text" id="manCat" placeholder="分类 (如 sec-8)">
+            <input type="text" id="manZhDesc" placeholder="中文解释" class="full">
+            <input type="text" id="manEnDesc" placeholder="英文解释" class="full">
+          </div>
+          <div class="modal-actions">
+            <button class="btn btn-primary" id="btnManualAdd"><span data-lang-zh>添加到词典</span><span data-lang-en>Add to Dictionary</span></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+<!-- ==================== AI 智能检索弹窗 ==================== -->
+<div class="ai-overlay" id="aiOverlay">
+  <div class="ai-panel">
+    <div class="ai-header">
+      <div class="ai-header-left">
+        <svg viewBox="0 0 24 24" style="width:22px;height:22px;fill:var(--primary);margin-right:10px;"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        <h3><span data-lang-zh>AI 智能检索</span><span data-lang-en>AI Smart Search</span></h3>
+      </div>
+      <button class="ai-close" id="aiClose">&times;</button>
+    </div>
+    <div class="ai-body">
+      <div id="aiScanning">
+        <div class="ai-progress-bar">
+          <div class="ai-progress-fill" id="aiProgressFill"></div>
+        </div>
+        <div class="ai-scan-text" id="aiScanText">正在初始化检索引擎<span class="typing-cursor"></span></div>
+      </div>
+      <div id="aiResults" style="display:none;">
+        <div class="ai-results-info" id="aiResultsInfo">共检索到 0 个候选术语</div>
+        <div class="ai-results-bar">
+          <button class="ai-btn-select" id="btnAiSelectAll"><span data-lang-zh>全选</span><span data-lang-en>Select All</span></button>
+          <button class="ai-btn-add" id="btnAiAddTerms" disabled><span data-lang-zh>添加到知识库</span><span data-lang-en>Add to Knowledge Base</span></button>
+        </div>
+        <div class="ai-terms-list" id="aiTermsList"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+</div>
+
+<div class="toast" id="toast"></div>
+<button class="back-to-top" id="backToTop" title="返回顶部">&uarr;</button>
+
+<script>
+// ===== CSS.escape 兼容性补丁 =====
+if (typeof CSS === 'undefined' || typeof CSS.escape !== 'function') {
+  window.CSS = window.CSS || {};
+  CSS.escape = function(value) {
+    if (arguments.length === 0) throw new TypeError('CSS.escape requires 1 argument.');
+    var string = String(value);
+    var length = string.length;
+    var result = '';
+    for (var i = 0; i < length; i++) {
+      var ch = string.charAt(i);
+      var code = string.charCodeAt(i);
+      if (code === 0x0000) { result += '\uFFFD'; }
+      else if ((code >= 0x0001 && code <= 0x001F) || code === 0x007F ||
+               (code >= 0x0030 && code <= 0x0039 && (i === 0 || (i === 1 && string.charAt(0) === '-'))) ||
+               (i === 0 && code >= 0x0041 && code <= 0x005A && (i + 1 >= length || (string.charCodeAt(i + 1) < 0x0030 || string.charCodeAt(i + 1) > 0x0039))) ||
+               code >= 0x0080 ||
+               code === 0x002D && (i === 0 || (i === 1 && string.charAt(0) === '-')) ||
+               !((code >= 0x0030 && code <= 0x0039) || (code >= 0x0041 && code <= 0x005A) || (code >= 0x0061 && code <= 0x007A) || code === 0x005F || code === 0x002D)) {
+        result += '\\' + code.toString(16).padStart(6, '0') + ' ';
+      } else {
+        result += ch;
+      }
+    }
+    return result;
+  };
+}
+
+// ===== 全局数据 =====
+const allTerms = [{"abbr": "MCB", "cn": "微型断路器", "en": "Miniature Circuit Breaker", "section": "sec-1", "zh_cat": "基础电气与配电保护类", "en_cat": "Electrical & Distribution Protection"}, {"abbr": "RCCB", "cn": "剩余电流动作断路器 (漏电开关)", "en": "Residual Current Operated Circuit-Breaker", "section": "sec-1", "zh_cat": "基础电气与配电保护类", "en_cat": "Electrical & Distribution Protection"}, {"abbr": "RCBO", "cn": "剩余电流动作断路器（带过流保护）", "en": "Residual Current Circuit Breaker with Overcurrent Protection", "section": "sec-1", "zh_cat": "基础电气与配电保护类", "en_cat": "Electrical & Distribution Protection"}, {"abbr": "SPD", "cn": "电涌保护器 (避雷器)", "en": "Surge Protection Device", "section": "sec-1", "zh_cat": "基础电气与配电保护类", "en_cat": "Electrical & Distribution Protection"}, {"abbr": "ACB", "cn": "空气断路器", "en": "Air Circuit Breaker", "section": "sec-1", "zh_cat": "基础电气与配电保护类", "en_cat": "Electrical & Distribution Protection"}, {"abbr": "MCCB", "cn": "塑壳断路器", "en": "Moulded Case Circuit Breaker", "section": "sec-1", "zh_cat": "基础电气与配电保护类", "en_cat": "Electrical & Distribution Protection"}, {"abbr": "RCD", "cn": "剩余电流动作保护器", "en": "Residual Current Device", "section": "sec-1", "zh_cat": "基础电气与配电保护类", "en_cat": "Electrical & Distribution Protection"}, {"abbr": "ELCB", "cn": "接地漏电断路器", "en": "Earth Leakage Circuit Breaker", "section": "sec-1", "zh_cat": "基础电气与配电保护类", "en_cat": "Electrical & Distribution Protection"}, {"abbr": "VFD", "cn": "变频驱动器", "en": "Variable Frequency Drive", "section": "sec-1", "zh_cat": "基础电气与配电保护类", "en_cat": "Electrical & Distribution Protection"}, {"abbr": "PLC", "cn": "可编程逻辑控制器", "en": "Programmable Logic Controller", "section": "sec-1", "zh_cat": "基础电气与配电保护类", "en_cat": "Electrical & Distribution Protection"}, {"abbr": "SCADA", "cn": "数据采集与监视控制系统", "en": "Supervisory Control And Data Acquisition", "section": "sec-1", "zh_cat": "基础电气与配电保护类", "en_cat": "Electrical & Distribution Protection"}, {"abbr": "kW", "cn": "千瓦", "en": "kilowatt", "section": "sec-1", "zh_cat": "基础电气与配电保护类", "en_cat": "Electrical & Distribution Protection"}, {"abbr": "kWh", "cn": "千瓦时 (度)", "en": "kilowatt-hour", "section": "sec-1", "zh_cat": "基础电气与配电保护类", "en_cat": "Electrical & Distribution Protection"}, {"abbr": "ATS", "cn": "双电源自动切换开关", "en": "Automatic Transfer Switch", "section": "sec-1", "zh_cat": "基础电气与配电保护类", "en_cat": "Electrical & Distribution Protection"}, {"abbr": "CT", "cn": "电流互感器", "en": "Current Transformer", "section": "sec-1", "zh_cat": "基础电气与配电保护类", "en_cat": "Electrical & Distribution Protection"}, {"abbr": "PT/VT", "cn": "电压互感器", "en": "Potential Transformer / Voltage Transformer", "section": "sec-1", "zh_cat": "基础电气与配电保护类", "en_cat": "Electrical & Distribution Protection"}, {"abbr": "Relay", "cn": "继电器", "en": "—", "section": "sec-1", "zh_cat": "基础电气与配电保护类", "en_cat": "Electrical & Distribution Protection"}, {"abbr": "Contactor", "cn": "接触器", "en": "—", "section": "sec-1", "zh_cat": "基础电气与配电保护类", "en_cat": "Electrical & Distribution Protection"}, {"abbr": "THDi", "cn": "电流谐波总畸变率", "en": "Total Harmonic Current Distortion", "section": "sec-1", "zh_cat": "基础电气与配电保护类", "en_cat": "Electrical & Distribution Protection"}, {"abbr": "CB", "cn": "断路器", "en": "Circuit Breaker", "section": "sec-1", "zh_cat": "基础电气与配电保护类", "en_cat": "Electrical & Distribution Protection"}, {"abbr": "PV", "cn": "光伏（太阳能光伏）", "en": "Photovoltaic", "section": "sec-2", "zh_cat": "光伏组件与附件类", "en_cat": "PV Modules & Accessories"}, {"abbr": "STC", "cn": "标准测试条件", "en": "Standard Test Conditions", "section": "sec-2", "zh_cat": "光伏组件与附件类", "en_cat": "PV Modules & Accessories"}, {"abbr": "NOCT", "cn": "标称工作电池温度", "en": "Nominal Operating Cell Temperature", "section": "sec-2", "zh_cat": "光伏组件与附件类", "en_cat": "PV Modules & Accessories"}, {"abbr": "BIPV", "cn": "光伏建筑一体化", "en": "Building Integrated Photovoltaic", "section": "sec-2", "zh_cat": "光伏组件与附件类", "en_cat": "PV Modules & Accessories"}, {"abbr": "BAPV", "cn": "建筑附着式光伏", "en": "Building Attached Photovoltaic", "section": "sec-2", "zh_cat": "光伏组件与附件类", "en_cat": "PV Modules & Accessories"}, {"abbr": "Junction Box", "cn": "接线盒", "en": "—", "section": "sec-2", "zh_cat": "光伏组件与附件类", "en_cat": "PV Modules & Accessories"}, {"abbr": "Bypass Diode", "cn": "旁路二极管", "en": "—", "section": "sec-2", "zh_cat": "光伏组件与附件类", "en_cat": "PV Modules & Accessories"}, {"abbr": "Isc", "cn": "短路电流", "en": "Short Circuit Current", "section": "sec-2", "zh_cat": "光伏组件与附件类", "en_cat": "PV Modules & Accessories"}, {"abbr": "Voc", "cn": "开路电压", "en": "Open Circuit Voltage", "section": "sec-2", "zh_cat": "光伏组件与附件类", "en_cat": "PV Modules & Accessories"}, {"abbr": "Vmp", "cn": "最大功率点电压", "en": "Voltage at Maximum Power", "section": "sec-2", "zh_cat": "光伏组件与附件类", "en_cat": "PV Modules & Accessories"}, {"abbr": "Imp", "cn": "最大功率点电流", "en": "Current at Maximum Power", "section": "sec-2", "zh_cat": "光伏组件与附件类", "en_cat": "PV Modules & Accessories"}, {"abbr": "FF", "cn": "填充因子", "en": "Fill Factor", "section": "sec-2", "zh_cat": "光伏组件与附件类", "en_cat": "PV Modules & Accessories"}, {"abbr": "PID", "cn": "电势诱导衰减", "en": "Potential Induced Degradation", "section": "sec-2", "zh_cat": "光伏组件与附件类", "en_cat": "PV Modules & Accessories"}, {"abbr": "LID", "cn": "光致衰减", "en": "Light Induced Degradation", "section": "sec-2", "zh_cat": "光伏组件与附件类", "en_cat": "PV Modules & Accessories"}, {"abbr": "Hot Spot", "cn": "热斑效应", "en": "—", "section": "sec-2", "zh_cat": "光伏组件与附件类", "en_cat": "PV Modules & Accessories"}, {"abbr": "Half-cell", "cn": "半片电池", "en": "—", "section": "sec-2", "zh_cat": "光伏组件与附件类", "en_cat": "PV Modules & Accessories"}, {"abbr": "Bifacial", "cn": "双面组件", "en": "—", "section": "sec-2", "zh_cat": "光伏组件与附件类", "en_cat": "PV Modules & Accessories"}, {"abbr": "PERC", "cn": "钝化发射极与背面电池", "en": "Passivated Emitter and Rear Cell", "section": "sec-2", "zh_cat": "光伏组件与附件类", "en_cat": "PV Modules & Accessories"}, {"abbr": "HJT", "cn": "异质结电池", "en": "Heterojunction Technology", "section": "sec-2", "zh_cat": "光伏组件与附件类", "en_cat": "PV Modules & Accessories"}, {"abbr": "TOPCon", "cn": "隧穿氧化层钝化接触电池", "en": "Tunnel Oxide Passivated Contact", "section": "sec-2", "zh_cat": "光伏组件与附件类", "en_cat": "PV Modules & Accessories"}, {"abbr": "IBC", "cn": "背接触电池", "en": "Interdigitated Back Contact", "section": "sec-2", "zh_cat": "光伏组件与附件类", "en_cat": "PV Modules & Accessories"}, {"abbr": "MBB", "cn": "多主栅", "en": "Multi Busbar", "section": "sec-2", "zh_cat": "光伏组件与附件类", "en_cat": "PV Modules & Accessories"}, {"abbr": "Shingled", "cn": "叠瓦组件", "en": "—", "section": "sec-2", "zh_cat": "光伏组件与附件类", "en_cat": "PV Modules & Accessories"}, {"abbr": "MPPT", "cn": "最大功率点跟踪", "en": "Maximum Power Point Tracking", "section": "sec-3", "zh_cat": "逆变器与能量转换类", "en_cat": "Inverters & Energy Conversion"}, {"abbr": "PWM", "cn": "脉冲宽度调制", "en": "Pulse Width Modulation", "section": "sec-3", "zh_cat": "逆变器与能量转换类", "en_cat": "Inverters & Energy Conversion"}, {"abbr": "DC", "cn": "直流电", "en": "Direct Current", "section": "sec-3", "zh_cat": "逆变器与能量转换类", "en_cat": "Inverters & Energy Conversion"}, {"abbr": "AC", "cn": "交流电", "en": "Alternating Current", "section": "sec-3", "zh_cat": "逆变器与能量转换类", "en_cat": "Inverters & Energy Conversion"}, {"abbr": "String Inverter", "cn": "组串式逆变器", "en": "—", "section": "sec-3", "zh_cat": "逆变器与能量转换类", "en_cat": "Inverters & Energy Conversion"}, {"abbr": "Micro Inverter", "cn": "微型逆变器", "en": "—", "section": "sec-3", "zh_cat": "逆变器与能量转换类", "en_cat": "Inverters & Energy Conversion"}, {"abbr": "Central Inverter", "cn": "集中式逆变器", "en": "—", "section": "sec-3", "zh_cat": "逆变器与能量转换类", "en_cat": "Inverters & Energy Conversion"}, {"abbr": "Hybrid Inverter", "cn": "混合逆变器", "en": "—", "section": "sec-3", "zh_cat": "逆变器与能量转换类", "en_cat": "Inverters & Energy Conversion"}, {"abbr": "Clipping", "cn": "削峰 / 功率限制", "en": "—", "section": "sec-3", "zh_cat": "逆变器与能量转换类", "en_cat": "Inverters & Energy Conversion"}, {"abbr": "THD", "cn": "总谐波失真", "en": "Total Harmonic Distortion", "section": "sec-3", "zh_cat": "逆变器与能量转换类", "en_cat": "Inverters & Energy Conversion"}, {"abbr": "Power Factor", "cn": "功率因数", "en": "—", "section": "sec-3", "zh_cat": "逆变器与能量转换类", "en_cat": "Inverters & Energy Conversion"}, {"abbr": "Islanding", "cn": "孤岛效应", "en": "—", "section": "sec-3", "zh_cat": "逆变器与能量转换类", "en_cat": "Inverters & Energy Conversion"}, {"abbr": "Transformerless", "cn": "无变压器型逆变器", "en": "—", "section": "sec-3", "zh_cat": "逆变器与能量转换类", "en_cat": "Inverters & Energy Conversion"}, {"abbr": "European Efficiency", "cn": "欧洲效率", "en": "—", "section": "sec-3", "zh_cat": "逆变器与能量转换类", "en_cat": "Inverters & Energy Conversion"}, {"abbr": "CEC Efficiency", "cn": "加州效率", "en": "—", "section": "sec-3", "zh_cat": "逆变器与能量转换类", "en_cat": "Inverters & Energy Conversion"}, {"abbr": "MPPT Channels", "cn": "MPPT 路数", "en": "—", "section": "sec-3", "zh_cat": "逆变器与能量转换类", "en_cat": "Inverters & Energy Conversion"}, {"abbr": "Start-up Voltage", "cn": "启动电压", "en": "—", "section": "sec-3", "zh_cat": "逆变器与能量转换类", "en_cat": "Inverters & Energy Conversion"}, {"abbr": "DC Cable", "cn": "直流线缆", "en": "—", "section": "sec-4", "zh_cat": "线缆、连接与接地类", "en_cat": "Cabling, Connectivity & Grounding"}, {"abbr": "AC Cable", "cn": "交流线缆", "en": "—", "section": "sec-4", "zh_cat": "线缆、连接与接地类", "en_cat": "Cabling, Connectivity & Grounding"}, {"abbr": "MC4", "cn": "MC4连接器", "en": "—", "section": "sec-4", "zh_cat": "线缆、连接与接地类", "en_cat": "Cabling, Connectivity & Grounding"}, {"abbr": "PV Wire", "cn": "光伏专用线缆", "en": "—", "section": "sec-4", "zh_cat": "线缆、连接与接地类", "en_cat": "Cabling, Connectivity & Grounding"}, {"abbr": "PE", "cn": "保护接地", "en": "Protective Earth", "section": "sec-4", "zh_cat": "线缆、连接与接地类", "en_cat": "Cabling, Connectivity & Grounding"}, {"abbr": "Bonding", "cn": "等电位联结 / 接地连接", "en": "—", "section": "sec-4", "zh_cat": "线缆、连接与接地类", "en_cat": "Cabling, Connectivity & Grounding"}, {"abbr": "EEA", "cn": "设备接地装置", "en": "Equipment Earthing Arrangement", "section": "sec-4", "zh_cat": "线缆、连接与接地类", "en_cat": "Cabling, Connectivity & Grounding"}, {"abbr": "AWG", "cn": "美国线规", "en": "American Wire Gauge", "section": "sec-4", "zh_cat": "线缆、连接与接地类", "en_cat": "Cabling, Connectivity & Grounding"}, {"abbr": "Busbar", "cn": "母线/汇流排", "en": "—", "section": "sec-4", "zh_cat": "线缆、连接与接地类", "en_cat": "Cabling, Connectivity & Grounding"}, {"abbr": "Combiner Box", "cn": "汇流箱", "en": "—", "section": "sec-4", "zh_cat": "线缆、连接与接地类", "en_cat": "Cabling, Connectivity & Grounding"}, {"abbr": "Disconnect Switch", "cn": "隔离开关", "en": "—", "section": "sec-4", "zh_cat": "线缆、连接与接地类", "en_cat": "Cabling, Connectivity & Grounding"}, {"abbr": "Cable Tray", "cn": "电缆桥架", "en": "—", "section": "sec-4", "zh_cat": "线缆、连接与接地类", "en_cat": "Cabling, Connectivity & Grounding"}, {"abbr": "Wire Gland", "cn": "电缆防水接头", "en": "—", "section": "sec-4", "zh_cat": "线缆、连接与接地类", "en_cat": "Cabling, Connectivity & Grounding"}, {"abbr": "On-grid", "cn": "并网系统", "en": "—", "section": "sec-5", "zh_cat": "并网、系统与政策类", "en_cat": "Grid-tie, Systems & Policy"}, {"abbr": "Off-grid", "cn": "离网系统", "en": "—", "section": "sec-5", "zh_cat": "并网、系统与政策类", "en_cat": "Grid-tie, Systems & Policy"}, {"abbr": "Hybrid System", "cn": "混合系统", "en": "—", "section": "sec-5", "zh_cat": "并网、系统与政策类", "en_cat": "Grid-tie, Systems & Policy"}, {"abbr": "Net Metering", "cn": "净计量电价 / 反送奖励", "en": "—", "section": "sec-5", "zh_cat": "并网、系统与政策类", "en_cat": "Grid-tie, Systems & Policy"}, {"abbr": "Feed-in Tariff (FiT)", "cn": "上网电价补贴", "en": "—", "section": "sec-5", "zh_cat": "并网、系统与政策类", "en_cat": "Grid-tie, Systems & Policy"}, {"abbr": "Anti-islanding", "cn": "防孤岛保护", "en": "—", "section": "sec-5", "zh_cat": "并网、系统与政策类", "en_cat": "Grid-tie, Systems & Policy"}, {"abbr": "BOS", "cn": "系统平衡部件", "en": "Balance of System", "section": "sec-5", "zh_cat": "并网、系统与政策类", "en_cat": "Grid-tie, Systems & Policy"}, {"abbr": "EPC", "cn": "工程总承包", "en": "Engineering, Procurement, and Construction", "section": "sec-5", "zh_cat": "并网、系统与政策类", "en_cat": "Grid-tie, Systems & Policy"}, {"abbr": "O&M", "cn": "运行与维护", "en": "Operation and Maintenance", "section": "sec-5", "zh_cat": "并网、系统与政策类", "en_cat": "Grid-tie, Systems & Policy"}, {"abbr": "PR", "cn": "性能比", "en": "Performance Ratio", "section": "sec-5", "zh_cat": "并网、系统与政策类", "en_cat": "Grid-tie, Systems & Policy"}, {"abbr": "CUF", "cn": "容量利用率", "en": "Capacity Utilization Factor", "section": "sec-5", "zh_cat": "并网、系统与政策类", "en_cat": "Grid-tie, Systems & Policy"}, {"abbr": "Grid Parity", "cn": "电网平价", "en": "—", "section": "sec-5", "zh_cat": "并网、系统与政策类", "en_cat": "Grid-tie, Systems & Policy"}, {"abbr": "Interconnection", "cn": "并网接入/互联", "en": "—", "section": "sec-5", "zh_cat": "并网、系统与政策类", "en_cat": "Grid-tie, Systems & Policy"}, {"abbr": "Availability", "cn": "可用率", "en": "—", "section": "sec-5", "zh_cat": "并网、系统与政策类", "en_cat": "Grid-tie, Systems & Policy"}, {"abbr": "Soiling Loss", "cn": "灰尘损失", "en": "—", "section": "sec-5", "zh_cat": "并网、系统与政策类", "en_cat": "Grid-tie, Systems & Policy"}, {"abbr": "Mismatch Loss", "cn": "失配损失", "en": "—", "section": "sec-5", "zh_cat": "并网、系统与政策类", "en_cat": "Grid-tie, Systems & Policy"}, {"abbr": "Cable Loss", "cn": "线损", "en": "—", "section": "sec-5", "zh_cat": "并网、系统与政策类", "en_cat": "Grid-tie, Systems & Policy"}, {"abbr": "Transformer Loss", "cn": "变压器损耗", "en": "—", "section": "sec-5", "zh_cat": "并网、系统与政策类", "en_cat": "Grid-tie, Systems & Policy"}, {"abbr": "IRR", "cn": "内部收益率", "en": "Internal Rate of Return", "section": "sec-6", "zh_cat": "经济性与项目评估类", "en_cat": "Economics & Project Evaluation"}, {"abbr": "LCOE", "cn": "平准化度电成本", "en": "Levelized Cost of Energy", "section": "sec-6", "zh_cat": "经济性与项目评估类", "en_cat": "Economics & Project Evaluation"}, {"abbr": "NPV", "cn": "净现值", "en": "Net Present Value", "section": "sec-6", "zh_cat": "经济性与项目评估类", "en_cat": "Economics & Project Evaluation"}, {"abbr": "ROI", "cn": "投资回报率", "en": "Return on Investment", "section": "sec-6", "zh_cat": "经济性与项目评估类", "en_cat": "Economics & Project Evaluation"}, {"abbr": "Payback Period", "cn": "投资回收期", "en": "—", "section": "sec-6", "zh_cat": "经济性与项目评估类", "en_cat": "Economics & Project Evaluation"}, {"abbr": "PPA", "cn": "购电协议", "en": "Power Purchase Agreement", "section": "sec-6", "zh_cat": "经济性与项目评估类", "en_cat": "Economics & Project Evaluation"}, {"abbr": "Capacity Factor", "cn": "容量系数 / 利用小时数系数", "en": "—", "section": "sec-6", "zh_cat": "经济性与项目评估类", "en_cat": "Economics & Project Evaluation"}, {"abbr": "Degradation Rate", "cn": "衰减率", "en": "—", "section": "sec-6", "zh_cat": "经济性与项目评估类", "en_cat": "Economics & Project Evaluation"}, {"abbr": "CAPEX", "cn": "资本支出 / 初始投资", "en": "Capital Expenditure", "section": "sec-6", "zh_cat": "经济性与项目评估类", "en_cat": "Economics & Project Evaluation"}, {"abbr": "OPEX", "cn": "运营支出", "en": "Operational Expenditure", "section": "sec-6", "zh_cat": "经济性与项目评估类", "en_cat": "Economics & Project Evaluation"}, {"abbr": "DSCR", "cn": "偿债备付率", "en": "Debt Service Coverage Ratio", "section": "sec-6", "zh_cat": "经济性与项目评估类", "en_cat": "Economics & Project Evaluation"}, {"abbr": "IP Rating", "cn": "防护等级", "en": "Ingress Protection Rating", "section": "sec-7", "zh_cat": "安全与安装规范类", "en_cat": "Safety & Installation Codes"}, {"abbr": "Arc Fault", "cn": "电弧故障", "en": "—", "section": "sec-7", "zh_cat": "安全与安装规范类", "en_cat": "Safety & Installation Codes"}, {"abbr": "AFCI", "cn": "电弧故障断路器", "en": "Arc Fault Circuit Interrupter", "section": "sec-7", "zh_cat": "安全与安装规范类", "en_cat": "Safety & Installation Codes"}, {"abbr": "Rapid Shutdown", "cn": "快速关断", "en": "—", "section": "sec-7", "zh_cat": "安全与安装规范类", "en_cat": "Safety & Installation Codes"}, {"abbr": "NEC", "cn": "国家电气规范", "en": "National Electrical Code", "section": "sec-7", "zh_cat": "安全与安装规范类", "en_cat": "Safety & Installation Codes"}, {"abbr": "IEC", "cn": "国际电工委员会", "en": "International Electrotechnical Commission", "section": "sec-7", "zh_cat": "安全与安装规范类", "en_cat": "Safety & Installation Codes"}, {"abbr": "UL", "cn": "美国保险商实验室", "en": "Underwriters Laboratories", "section": "sec-7", "zh_cat": "安全与安装规范类", "en_cat": "Safety & Installation Codes"}, {"abbr": "Ground Fault", "cn": "接地故障", "en": "—", "section": "sec-7", "zh_cat": "安全与安装规范类", "en_cat": "Safety & Installation Codes"}, {"abbr": "GFCI", "cn": "接地故障电路断路器", "en": "Ground Fault Circuit Interrupter", "section": "sec-7", "zh_cat": "安全与安装规范类", "en_cat": "Safety & Installation Codes"}, {"abbr": "Arc Flash", "cn": "电弧闪光", "en": "—", "section": "sec-7", "zh_cat": "安全与安装规范类", "en_cat": "Safety & Installation Codes"}, {"abbr": "Lockout/Tagout (LOTO)", "cn": "上锁挂牌", "en": "—", "section": "sec-7", "zh_cat": "安全与安装规范类", "en_cat": "Safety & Installation Codes"}, {"abbr": "PPE", "cn": "个人防护装备", "en": "Personal Protective Equipment", "section": "sec-7", "zh_cat": "安全与安装规范类", "en_cat": "Safety & Installation Codes"}, {"abbr": "Hazardous Area", "cn": "危险区域", "en": "—", "section": "sec-7", "zh_cat": "安全与安装规范类", "en_cat": "Safety & Installation Codes"}, {"abbr": "BMS", "cn": "电池管理系统", "en": "Battery Management System", "section": "sec-8", "zh_cat": "储能系统类", "en_cat": "Energy Storage Systems"}, {"abbr": "SOC", "cn": "荷电状态", "en": "State of Charge", "section": "sec-8", "zh_cat": "储能系统类", "en_cat": "Energy Storage Systems"}, {"abbr": "SOH", "cn": "健康状态", "en": "State of Health", "section": "sec-8", "zh_cat": "储能系统类", "en_cat": "Energy Storage Systems"}, {"abbr": "DOD", "cn": "放电深度", "en": "Depth of Discharge", "section": "sec-8", "zh_cat": "储能系统类", "en_cat": "Energy Storage Systems"}, {"abbr": "LFP / LiFePO₄", "cn": "磷酸铁锂电池", "en": "Lithium Iron Phosphate", "section": "sec-8", "zh_cat": "储能系统类", "en_cat": "Energy Storage Systems"}, {"abbr": "NMC", "cn": "三元锂电池", "en": "Nickel Manganese Cobalt", "section": "sec-8", "zh_cat": "储能系统类", "en_cat": "Energy Storage Systems"}, {"abbr": "PCS", "cn": "储能变流器/电力转换系统", "en": "Power Conversion System", "section": "sec-8", "zh_cat": "储能系统类", "en_cat": "Energy Storage Systems"}, {"abbr": "EMS", "cn": "能量管理系统", "en": "Energy Management System", "section": "sec-8", "zh_cat": "储能系统类", "en_cat": "Energy Storage Systems"}, {"abbr": "Cycle Life", "cn": "循环寿命", "en": "—", "section": "sec-8", "zh_cat": "储能系统类", "en_cat": "Energy Storage Systems"}, {"abbr": "Round-trip Efficiency", "cn": "充放电往返效率", "en": "—", "section": "sec-8", "zh_cat": "储能系统类", "en_cat": "Energy Storage Systems"}, {"abbr": "C-rate", "cn": "充放电倍率", "en": "—", "section": "sec-8", "zh_cat": "储能系统类", "en_cat": "Energy Storage Systems"}, {"abbr": "ESS", "cn": "储能系统", "en": "Energy Storage System", "section": "sec-8", "zh_cat": "储能系统类", "en_cat": "Energy Storage Systems"}, {"abbr": "Self-discharge", "cn": "自放电", "en": "—", "section": "sec-8", "zh_cat": "储能系统类", "en_cat": "Energy Storage Systems"}, {"abbr": "Thermal Runaway", "cn": "热失控", "en": "—", "section": "sec-8", "zh_cat": "储能系统类", "en_cat": "Energy Storage Systems"}, {"abbr": "Data Logger", "cn": "数据记录器/数采仪", "en": "—", "section": "sec-9", "zh_cat": "电站监控与环境监测类", "en_cat": "Plant Monitoring & Environmental Sensing"}, {"abbr": "Weather Station", "cn": "气象站", "en": "—", "section": "sec-9", "zh_cat": "电站监控与环境监测类", "en_cat": "Plant Monitoring & Environmental Sensing"}, {"abbr": "Pyranometer", "cn": "总辐射表/日照强度计", "en": "—", "section": "sec-9", "zh_cat": "电站监控与环境监测类", "en_cat": "Plant Monitoring & Environmental Sensing"}, {"abbr": "Soiling Ratio", "cn": "积灰比/污染比", "en": "—", "section": "sec-9", "zh_cat": "电站监控与环境监测类", "en_cat": "Plant Monitoring & Environmental Sensing"}, {"abbr": "Irradiance", "cn": "辐照度", "en": "—", "section": "sec-9", "zh_cat": "电站监控与环境监测类", "en_cat": "Plant Monitoring & Environmental Sensing"}, {"abbr": "Irradiation", "cn": "辐照量/日照量", "en": "—", "section": "sec-9", "zh_cat": "电站监控与环境监测类", "en_cat": "Plant Monitoring & Environmental Sensing"}, {"abbr": "I-V Curve", "cn": "I-V特性曲线", "en": "—", "section": "sec-9", "zh_cat": "电站监控与环境监测类", "en_cat": "Plant Monitoring & Environmental Sensing"}, {"abbr": "Fault Ride Through (FRT)", "cn": "故障穿越", "en": "—", "section": "sec-9", "zh_cat": "电站监控与环境监测类", "en_cat": "Plant Monitoring & Environmental Sensing"}, {"abbr": "String Monitoring", "cn": "组串监测", "en": "—", "section": "sec-9", "zh_cat": "电站监控与环境监测类", "en_cat": "Plant Monitoring & Environmental Sensing"}, {"abbr": "IEC 61215", "cn": "IEC 61215", "en": "IEC 61215", "section": "sec-10", "zh_cat": "标准与认证类", "en_cat": "Standards & Certifications"}, {"abbr": "IEC 61730", "cn": "IEC 61730", "en": "IEC 61730", "section": "sec-10", "zh_cat": "标准与认证类", "en_cat": "Standards & Certifications"}, {"abbr": "IEC 62109", "cn": "IEC 62109", "en": "IEC 62109", "section": "sec-10", "zh_cat": "标准与认证类", "en_cat": "Standards & Certifications"}, {"abbr": "UL 1703", "cn": "UL 1703", "en": "UL 1703", "section": "sec-10", "zh_cat": "标准与认证类", "en_cat": "Standards & Certifications"}, {"abbr": "UL 1741", "cn": "UL 1741", "en": "UL 1741", "section": "sec-10", "zh_cat": "标准与认证类", "en_cat": "Standards & Certifications"}, {"abbr": "TÜV", "cn": "德国技术监督协会认证", "en": "Technischer Überwachungsverein", "section": "sec-10", "zh_cat": "标准与认证类", "en_cat": "Standards & Certifications"}, {"abbr": "CE", "cn": "欧盟CE认证", "en": "Conformité Européenne", "section": "sec-10", "zh_cat": "标准与认证类", "en_cat": "Standards & Certifications"}, {"abbr": "CQC", "cn": "中国质量认证中心", "en": "China Quality Certification Centre", "section": "sec-10", "zh_cat": "标准与认证类", "en_cat": "Standards & Certifications"}, {"abbr": "CGC", "cn": "北京鉴衡认证中心", "en": "China General Certification Centre", "section": "sec-10", "zh_cat": "标准与认证类", "en_cat": "Standards & Certifications"}, {"abbr": "ETL", "cn": "ETL认证（美国）", "en": "Electrical Testing Laboratories", "section": "sec-10", "zh_cat": "标准与认证类", "en_cat": "Standards & Certifications"}, {"abbr": "CSA", "cn": "加拿大标准协会认证", "en": "Canadian Standards Association", "section": "sec-10", "zh_cat": "标准与认证类", "en_cat": "Standards & Certifications"}, {"abbr": "RETIE", "cn": "哥伦比亚电气安装技术规范", "en": "Reglamento Técnico de Instalaciones Eléctricas", "section": "sec-10", "zh_cat": "标准与认证类", "en_cat": "Standards & Certifications"}, {"abbr": "NRS", "cn": "南非国家规范标准", "en": "National Rationalised Specification", "section": "sec-10", "zh_cat": "标准与认证类", "en_cat": "Standards & Certifications"}];
+const categoryNames = {"sec-1": {"zh": "基础电气与配电保护类", "en": "Electrical & Distribution Protection"}, "sec-2": {"zh": "光伏组件与附件类", "en": "PV Modules & Accessories"}, "sec-3": {"zh": "逆变器与能量转换类", "en": "Inverters & Energy Conversion"}, "sec-4": {"zh": "线缆、连接与接地类", "en": "Cabling, Connectivity & Grounding"}, "sec-5": {"zh": "并网、系统与政策类", "en": "Grid-tie, Systems & Policy"}, "sec-6": {"zh": "经济性与项目评估类", "en": "Economics & Project Evaluation"}, "sec-7": {"zh": "安全与安装规范类", "en": "Safety & Installation Codes"}, "sec-8": {"zh": "储能系统类", "en": "Energy Storage Systems"}, "sec-9": {"zh": "电站监控与环境监测类", "en": "Plant Monitoring & Environmental Sensing"}, "sec-10": {"zh": "标准与认证类", "en": "Standards & Certifications"}};
+const catSections = ["sec-1", "sec-2", "sec-3", "sec-4", "sec-5", "sec-6", "sec-7", "sec-8", "sec-9", "sec-10"];
+const totalTermsCount = 151;
+let runningTotal = totalTermsCount;
+
+// 文章列表
+const knowledgeArticles = [{"id": 1, "title": "EMS 与各部分连接及功能", "url": "https://www.doubao.com/thread/xd6a66504ab69888e885c34720cf8b4a7", "source": "doubao.com", "date": "2026-06-23", "tags": ["EMS", "配电室", "防逆流", "PCS", "BMS", "CT", "PT", "ATS", "RS485", "Modbus", "IEC61850", "数据采集"], "summary": "EMS 是源-网-荷-储一体化调度大脑，配电室属于「网侧+负荷侧」，所有进线、出线、并网点、变压器、开关数据都要实时上传 EMS。本文详细介绍了EMS需要采集配电室的电气量、开关状态、环境告警等全部信息，以及全套硬件分层方案和两种典型接线方案。", "content": "# 一、结论：EMS 必须采集配电室全部信息（带防逆流微网刚需）\n\nEMS 是源-网-荷-储一体化调度大脑，配电室属于**\"网侧 + 负荷侧\"**，所有进线、出线、并网点、变压器、开关数据都要实时上传 EMS，否则：\n\n1. **防逆流无法实现**：没有并网点反向功率、总负荷功率，EMS 不知道光伏富余多少；\n2. **能量调度失效**：无法判断负载大小，不能精准调度储能充放电、限制光伏出力；\n3. **无安全保护**：配电室过流、过载、三相不平衡、开关故障无法联动 EMS 告警/切负荷。\n\n## EMS 要采集配电室哪些信息？\n\n### 1. 电气量（遥测，防逆流核心）\n\n- 并网点总进线：三相电压、电流、正向/反向有功功率（逆流判定依据）、无功、功率因数、频率、谐波、双向电量；\n- 变压器：高低压侧功率、油温、负载率；\n- 各低压出线回路：分路功率、电流、用电量（可控负荷/重要负荷区分）；\n- 无功补偿柜：投切状态、补偿容量。\n\n### 2. 开关状态（遥信）\n\n高低压断路器、并网开关、ATS 双电源、分段开关**分/合闸位置**、故障脱扣信号。\n\n### 3. 遥控（EMS 下发控制）\n\nEMS 可远程下发指令：投切无功补偿、分合非重要负荷回路、并网开关联锁保护。\n\n### 4. 环境/告警（选配）\n\n## 二、配电室采集用到的全套硬件（分层）\n\n### 1. 感知层（配电柜内就地测量）\n\n#### （1）多功能电力仪表（最主流）\n\n- 安装位置：高压进线柜、变压器柜、0.4kV 每路出线、并网点关口柜（防逆流专用双向计量表）；\n- 功能：CT/PT 接入，直接测全电量、反向功率、谐波，自带 RS485 Modbus；\n- 选型：关口必须用**双向计量多功能表**，能读取反向有功。\n\n#### （2）微机保护装置（10kV 高压柜）\n\nAM5SE、APM 系列，采集高压电流电压、故障保护信号，485 上传采集网关。\n\n#### （3）电流互感器 CT、电压 PT\n\n所有仪表、测控装置都依靠 CT 取电流信号，老旧配电柜无仪表时加装开合式 CT。\n\n#### （4）开关量采集模块（遥信模块）\n\n采集断路器辅助触点、故障告警、门磁、温湿度传感器干接点信号，转 485 总线。\n\n### 2. 通讯采集层（核心中转设备）\n\n#### ① 智能网关/通讯管理机（项目标配，又称微网数据采集器）\n\n- 作用：配电室所有仪表、保护、PCS、BMS、逆变器都先接到它，统一协议转换后上传 EMS；\n- 接口：多路 RS485 下行接仪表，网口上行连 EMS 服务器；\n- 关键能力：Modbus RTU 转 Modbus TCP、DL/T645、IEC61850 多协议兼容，边缘缓存、就地快速闭环防逆流逻辑；\n- 别名：数据采集器、规约转换器、边缘计算网关。\n\n#### ② 串口服务器（小型简易项目）\n\n仅 485 转网口透传，无协议解析，只适合设备少的微型微网，大型储能微网不推荐。\n\n### 3. EMS 主站（站控层）\n\n1. **本地一体式微网控制器**（中小储能）：自带采集网关功能，直接 485 接配电室仪表，集成 EMS 调度算法；\n2. **独立 EMS 服务器 + 上位机**（大型工商业/园区微网）：配电室网关通过局域网上传数据至服务器。\n\n## 三、两种典型接线方案（配电室→EMS）\n\n### 方案 1：标准分层方案（带防逆流大型项目，推荐）\n\n配电柜多功能仪表/保护装置（RS485） → 智能采集网关/通讯管理机（协议汇总） → 以太网 → EMS 主站\n\n- 优势：布线清晰，网关做数据预处理，EMS 负载低，逆流响应速度快；\n- 适用：100kW 以上光伏储能、有多路低压出线、10kV 高压配电。\n\n### 方案 2：简易直连方案（微型户用/小型工商业）\n\n配电室关口双向电表 RS485 → 直接接入微网 EMS 一体机 485 口\n\n- 局限：回路多、设备多时总线冲突、刷新慢，仅适合单路出线场景。\n\n## 四、防逆流场景下配电室采集的关键逻辑\n\n1. 配电室并网点双向多功能表实时采集反向功率，经采集网关上传 EMS；\n2. EMS 结合配电室总负荷功率、光伏出力、储能 SOC，计算过剩功率；\n3. EMS 下发指令：优先储能充电→投无功补偿→提升可控负荷→限光伏功率；\n4. 若配电室过载/短路，仪表上传故障信号，EMS 联动断路器跳闸保护。\n\n## 极简总结\n\n1. EMS 必须采集配电室全部回路、并网点、变压器、开关数据，是防逆流与能量调度的基础；\n2. 配电柜内用多功能双向计量仪表做就地测量；\n3. 统一中转设备是智能采集网关/通讯管理机（行业统称数据采集器），汇总所有配电室设备再上传 EMS；\n4. 高压柜增加微机保护，老旧配电柜加装开关量采集模块采集跳闸、告警信号。"}];
+let articleIdCounter = knowledgeArticles.length;
+
+// 预置网址匹配
+const KNOWN_URLS = {"https://www.doubao.com/thread/xd6a66504ab69888e885c34720cf8b4a7": 0};
+
+// ===== 语言切换 =====
+function setLang(lang) {
+  document.body.className = 'lang-' + lang;
+  localStorage.setItem('termLang', lang);
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+  updateSearchPlaceholder(lang);
+  updateTermCountDisplay(lang);
+}
+function updateSearchPlaceholder(lang) {
+  const input = document.getElementById('searchInput');
+  const zh = input.dataset.placeholderZh;
+  const en = input.dataset.placeholderEn;
+  input.placeholder = (lang === 'zh') ? zh : (lang === 'en') ? en : zh + ' / ' + en;
+  const ai = document.getElementById('articleSearchInput');
+  if (ai) { const azh = ai.dataset.placeholderZh; const aen = ai.dataset.placeholderEn; ai.placeholder = (lang === 'zh') ? azh : (lang === 'en') ? aen : azh + ' / ' + aen; }
+}
+function updateTermCountDisplay(lang) {
+  const el = document.getElementById('searchCount');
+  if (!document.getElementById('searchInput').value.trim()) {
+    if (lang === 'zh') el.textContent = runningTotal + ' 条术语';
+    else if (lang === 'en') el.textContent = runningTotal + ' Terms';
+    else el.textContent = runningTotal + ' 条术语 / ' + runningTotal + ' Terms';
+  }
+}
+document.querySelectorAll('.lang-btn').forEach(btn => btn.addEventListener('click', () => setLang(btn.dataset.lang)));
+const savedLang = localStorage.getItem('termLang') || 'both';
+setLang(savedLang);
+
+// ===== Tab 切换 =====
+function switchTab(tabName) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tabName));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.toggle('active', c.id === 'tab-' + tabName));
+  if (tabName === 'articles') renderArticles();
+}
+document.querySelectorAll('.tab-btn').forEach(b => b.addEventListener('click', () => switchTab(b.dataset.tab)));
+
+// ===== 术语搜索 =====
+const searchInput = document.getElementById('searchInput');
+const searchClear = document.getElementById('searchClear');
+const countEl = document.getElementById('searchCount');
+const suggestionsEl = document.getElementById('suggestions');
+const sections = document.getElementById('tab-terms').querySelectorAll('.section');
+let activeSugIdx = -1, suggestionList = [];
+
+function buildSuggestions(q) {
+  if (!q) { suggestionsEl.innerHTML=''; suggestionsEl.classList.remove('visible'); suggestionList=[]; activeSugIdx=-1; return; }
+  const lower = q.toLowerCase();
+  suggestionList = allTerms.filter(t => t.abbr.toLowerCase().includes(lower) || t.cn.toLowerCase().includes(lower) || t.en.toLowerCase().includes(lower)).slice(0,15);
+  const lang = document.body.className.replace('lang-','');
+  if (suggestionList.length === 0) {
+    suggestionsEl.innerHTML = '<div class="no-sug">' + (lang==='en' ? 'No suggestions' : '无匹配建议') + '</div>';
+  } else {
+    suggestionsEl.innerHTML = suggestionList.map((t,i) => '<div class="sug-item" data-idx="'+i+'" data-section="'+t.section+'" data-abbr="'+t.abbr+'"><span class="sug-abbr">'+t.abbr+'</span><span class="sug-cn">'+t.cn+'</span><span class="sug-category">'+(categoryNames[t.section]?categoryNames[t.section][lang==='en'?'en':'zh']||categoryNames[t.section].zh:'')+'</span></div>').join('');
+  }
+  suggestionsEl.classList.add('visible'); activeSugIdx=-1;
+}
+function selectSuggestion(itemEl) {
+  const sectionId = itemEl.dataset.section, abbr = itemEl.dataset.abbr;
+  closeSuggestions();
+  sections.forEach(sec => { sec.classList.remove('hidden'); sec.querySelectorAll('tbody tr').forEach(tr => tr.classList.remove('hidden','highlight')); });
+  searchInput.value=''; runningTotal=totalTermsCount; updateTermCountDisplay(document.body.className.replace('lang-','')); countEl.classList.remove('no-match'); searchClear.classList.remove('visible');
+  const targetSec = document.getElementById(sectionId);
+  if (targetSec) {
+    targetSec.scrollIntoView({behavior:'smooth',block:'center'});
+    setTimeout(() => { const tr = targetSec.querySelector('tr[data-abbr="'+CSS.escape(abbr)+'"]'); if(tr){ tr.classList.add('highlight'); tr.scrollIntoView({behavior:'smooth',block:'center'}); setTimeout(()=>tr.classList.remove('highlight'),3000); } }, 400);
+  }
+}
+function closeSuggestions() { suggestionsEl.classList.remove('visible'); suggestionList=[]; activeSugIdx=-1; }
+function doTermSearch() {
+  const q = searchInput.value.trim().toLowerCase(); let visibleTotal=0;
+  sections.forEach(sec => { let secVis=false; sec.querySelectorAll('tbody tr').forEach(tr => { const abbr=(tr.dataset.abbr||'').toLowerCase(), cn=(tr.dataset.cn||'').toLowerCase(), eng=tr.cells[1]?tr.cells[1].textContent.toLowerCase():''; const match=!q||abbr.includes(q)||cn.includes(q)||eng.includes(q); tr.classList.toggle('hidden',!match); if(match){visibleTotal++;secVis=true;} }); sec.classList.toggle('hidden',!secVis); });
+  const lang = document.body.className.replace('lang-','');
+  if(q){ countEl.textContent=(lang==='en'?'Found ':'找到 ')+visibleTotal+(lang==='en'?' results':' 条结果'); countEl.classList.toggle('no-match',visibleTotal===0); }
+  else { updateTermCountDisplay(lang); countEl.classList.remove('no-match'); }
+  searchClear.classList.toggle('visible',q.length>0);
+  buildSuggestions(q);
+}
+searchInput.addEventListener('input', doTermSearch);
+searchInput.addEventListener('keydown', (e) => {
+  const items = suggestionsEl.querySelectorAll('.sug-item');
+  if(!suggestionsEl.classList.contains('visible')||items.length===0){ if(e.key==='Escape')closeSuggestions(); return; }
+  if(e.key==='ArrowDown'){ e.preventDefault(); activeSugIdx=Math.min(activeSugIdx+1,items.length-1); items.forEach((it,i)=>it.classList.toggle('active',i===activeSugIdx)); items[activeSugIdx]?.scrollIntoView({block:'nearest'}); }
+  else if(e.key==='ArrowUp'){ e.preventDefault(); activeSugIdx=Math.max(activeSugIdx-1,0); items.forEach((it,i)=>it.classList.toggle('active',i===activeSugIdx)); items[activeSugIdx]?.scrollIntoView({block:'nearest'}); }
+  else if(e.key==='Enter'){ e.preventDefault(); if(activeSugIdx>=0&&items[activeSugIdx]) selectSuggestion(items[activeSugIdx]); }
+  else if(e.key==='Escape'){ closeSuggestions(); }
+});
+document.addEventListener('click', (e) => { if(!suggestionsEl.contains(e.target)&&e.target!==searchInput)closeSuggestions(); });
+suggestionsEl.addEventListener('click', (e) => { const item=e.target.closest('.sug-item'); if(item)selectSuggestion(item); });
+searchClear.addEventListener('click', () => { searchInput.value=''; closeSuggestions(); doTermSearch(); searchInput.focus(); });
+
+// ===== 知识文章渲染 =====
+function simpleMarkdownToHTML(md) {
+  if (!md) return '';
+  try {
+    let html = md;
+    // basic HTML escape
+    html = html.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    // protect code blocks and inline code
+    html = html.replace(/```([\s\S]*?)```/g, function(m, c) { return '\x00CODE\x00' + c + '\x00/CODE\x00'; });
+    html = html.replace(/`([^`]+)`/g, '\x00INLINE\x00$1\x00/INLINE\x00');
+    // headings
+    html = html.replace(/^#### (.+)$/gm, '<h4>$1</h4>');
+    html = html.replace(/^### (.+)$/gm, '<h3>$1</h3>');
+    html = html.replace(/^## (.+)$/gm, '<h2>$1</h2>');
+    html = html.replace(/^# (.+)$/gm, '<h1>$1</h1>');
+    // bold
+    html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    // ordered lists first
+    html = html.replace(/^(\d+)\. (.+)$/gm, '<li>$2</li>');
+    html = html.replace(/((?:<li>[\s\S]*?<\/li>(?:\r?\n<li>[\s\S]*?<\/li>)*))/g, function(m) {
+      if (m.indexOf('\x00') !== -1) return m;
+      return '<ol>' + m + '</ol>';
+    });
+    // unordered lists
+    html = html.replace(/^- (.+)$/gm, '<li>$1</li>');
+    html = html.replace(/((?:<li>[\s\S]*?<\/li>(?:\r?\n<li>[\s\S]*?<\/li>)*))/g, function(m) {
+      if (m.indexOf('<ol>') !== -1 || m.indexOf('\x00') !== -1) return m;
+      return '<ul>' + m + '</ul>';
+    });
+    // paragraphs
+    html = html.replace(/\n\n/g, '</p><p>');
+    html = html.replace(/\n/g, '<br>');
+    html = '<p>' + html + '</p>';
+    // cleanup
+    html = html.replace(/<p><\/p>/g, '');
+    html = html.replace(/<p><br><\/p>/g, '');
+    html = html.replace(/<p><h([1-4])/g, '<h$1');
+    html = html.replace(/<\/h([1-4])><\/p>/g, '</h$1');
+    html = html.replace(/<p><ol>/g, '<ol>');
+    html = html.replace(/<\/ol><\/p>/g, '</ol>');
+    html = html.replace(/<p><ul>/g, '<ul>');
+    html = html.replace(/<\/ul><\/p>/g, '</ul>');
+    // restore code blocks
+    html = html.replace(/\x00CODE\x00([\s\S]*?)\x00\/CODE\x00/g, '<pre><code>$1</code></pre>');
+    html = html.replace(/\x00INLINE\x00([\s\S]*?)\x00\/INLINE\x00/g, '<code>$1</code>');
+    return html;
+  } catch(e) {
+    console.error('simpleMarkdownToHTML error:', e);
+    return '<p>' + md.replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>') + '</p>';
+  }
+}
+
+function renderArticles(filter) {
+  const list = document.getElementById('articleList');
+  const empty = document.getElementById('articlesEmpty');
+  let articles = knowledgeArticles;
+  if (filter) {
+    const f = filter.toLowerCase();
+    articles = articles.filter(a => a.title.toLowerCase().includes(f) || a.tags.some(t=>t.toLowerCase().includes(f)) || a.content.toLowerCase().includes(f) || a.summary.toLowerCase().includes(f));
+  }
+  if (articles.length === 0) {
+    list.innerHTML = ''; empty.style.display = 'block';
+  } else {
+    empty.style.display = 'none';
+    list.innerHTML = articles.map(a => {
+      const summary = a.summary || a.content.replace(/[#*`\n]/g,' ').substring(0,150) + '...';
+      return '<div class="article-card" data-aid="'+a.id+'">'+
+        '<div class="article-card-header">'+
+          '<div class="article-card-info">'+
+            '<div class="article-card-title" onclick="toggleArticleDetail('+a.id+')">'+a.title+'</div>'+
+            '<div class="article-meta">'+
+              '<span class="meta-source">'+a.source+'</span>'+
+              '<span class="meta-date">'+a.date+'</span>'+
+            '</div>'+
+            '<div class="article-tags">'+a.tags.map(t=>'<span class="article-tag">'+t+'</span>').join('')+'</div>'+
+          '</div>'+
+        '</div>'+
+        '<div class="article-summary">'+summary+'</div>'+
+        '<div class="article-actions">'+
+          '<button class="btn-sm btn-outline" onclick="toggleArticleDetail('+a.id+')"><span data-lang-zh>阅读全文</span><span data-lang-en>Read More</span></button>'+
+          (a.url ? '<a href="'+a.url+'" target="_blank" rel="noopener" class="btn-sm btn-outline-secondary" style="text-decoration:none;display:inline-flex;align-items:center;"><span data-lang-zh>跳转原文</span><span data-lang-en>Original</span></a>' : '')+
+        '</div>'+
+        '<div class="article-detail" id="articleDetail-'+a.id+'">'+
+          '<div class="article-detail-content">'+simpleMarkdownToHTML(a.content)+'</div>'+
+        '</div>'+
+      '</div>';
+    }).join('');
+  }
+  document.getElementById('articleCount').textContent = knowledgeArticles.length + ' 篇文章';
+}
+
+function toggleArticleDetail(id) {
+  const detail = document.getElementById('articleDetail-'+id);
+  detail.classList.toggle('open');
+}
+
+// 文章搜索
+document.getElementById('articleSearchInput').addEventListener('input', function() {
+  const q = this.value.trim();
+  renderArticles(q);
+  document.getElementById('articleSearchClear').classList.toggle('visible', q.length > 0);
+});
+document.getElementById('articleSearchClear').addEventListener('click', function() {
+  document.getElementById('articleSearchInput').value = '';
+  renderArticles();
+  this.classList.remove('visible');
+});
+
+// ===== 弹窗控制 =====
+const modalOverlay = document.getElementById('modalOverlay');
+const modalClose = document.getElementById('modalClose');
+function openModal() { modalOverlay.classList.add('open'); }
+function closeModal() { modalOverlay.classList.remove('open'); clearExtractResult(); }
+modalClose.addEventListener('click', closeModal);
+modalOverlay.addEventListener('click', e => { if(e.target===modalOverlay) closeModal(); });
+document.getElementById('btnAddTerm').addEventListener('click', openModal);
+document.getElementById('btnAddArticle').addEventListener('click', () => { switchTab('articles'); openModal(); });
+
+// 弹窗内 Tab
+document.querySelectorAll('.modal-tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.modal-tab').forEach(b => b.classList.toggle('active', b===btn));
+    document.querySelectorAll('.modal-panel').forEach(p => p.classList.toggle('active', p.id==='panel-'+btn.dataset.mtab));
+  });
+});
+
+function clearExtractResult() {
+  document.getElementById('extractResult').style.display = 'none';
+  document.getElementById('extractActions').style.display = 'none';
+  document.getElementById('extractArticle').style.display = 'none';
+  document.getElementById('extractTerms').innerHTML = '';
+  document.getElementById('urlInput').value = '';
+  document.getElementById('fetchStatus').textContent = '';
+}
+
+// ===== URL 抓取 =====
+let currentExtractedTerms = [];
+document.getElementById('btnFetch').addEventListener('click', () => {
+  const url = document.getElementById('urlInput').value.trim();
+  if (!url) { showToast('请粘贴链接'); return; }
+  const statusEl = document.getElementById('fetchStatus');
+  statusEl.textContent = '正在查找…';
+
+  // 检查已知URL
+  const knownIdx = KNOWN_URLS[url];
+  if (knownIdx !== undefined) {
+    const article = knowledgeArticles[knownIdx];
+    statusEl.textContent = '已匹配预置文章';
+    document.getElementById('extractResult').style.display = 'block';
+    document.getElementById('extractArticle').style.display = 'block';
+    document.getElementById('extractArticle').innerHTML = '<strong>✔ 文章已保存：</strong>' + article.title;
+
+    // 提取候选术语
+    const articleText = article.content;
+    const candidates = [];
+    const candidateDefs = [{"abbr": "RS485", "en": "RS-485 Serial Communication Standard", "cn": "RS-485串行通信标准", "section": "sec-9", "zh_desc": "一种差分信号传输的串行通信标准，支持多点长距离通信，广泛用于工业现场总线和光伏/储能设备互联。", "en_desc": "Differential serial communication standard supporting multi-drop long-distance communication, widely used in industrial fieldbuses and PV/storage device interconnection."}, {"abbr": "Modbus", "en": "Modbus Protocol", "cn": "Modbus通信协议", "section": "sec-9", "zh_desc": "由Modicon（现施耐德）发布的串行通信协议，已成为工业电子设备之间通信的事实标准，光伏/储能系统中仪表、逆变器、PCS普遍支持。", "en_desc": "Serial communication protocol published by Modicon (now Schneider), a de facto standard for industrial electronic device communication; widely supported by meters, inverters and PCS in PV/storage systems."}, {"abbr": "IEC 61850", "en": "IEC 61850", "cn": "IEC 61850变电站通信标准", "section": "sec-10", "zh_desc": "国际电工委员会发布的变电站自动化通信网络与系统标准，定义数据模型和通信服务，逐步应用于大型光伏/储能电站的站控层通信。", "en_desc": "IEC standard for substation automation communication networks and systems, defining data models and services; increasingly adopted in utility-scale PV/storage plant station-level communication."}, {"abbr": "DL/T 645", "en": "DL/T 645 Multi-function Energy Meter Communication Protocol", "cn": "DL/T 645多功能电能表通信协议", "section": "sec-10", "zh_desc": "中国电力行业标准，规定多功能电能表与数据终端设备之间的物理连接和通信协议，广泛用于国内关口表、配电室仪表的数据采集。", "en_desc": "Chinese power industry standard for communication between multi-function energy meters and data terminals; widely used for domestic gateway meter and distribution room instrument data acquisition."}];
+    candidateDefs.forEach(c => {
+      if (articleText.toUpperCase().includes(c.abbr.toUpperCase())) {
+        if (!allTerms.some(t => t.abbr === c.abbr)) {
+          candidates.push(c);
+        }
+      }
+    });
+
+    currentExtractedTerms = candidates;
+    const termsDiv = document.getElementById('extractTerms');
+    if (candidates.length > 0) {
+      termsDiv.innerHTML = '<p style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:8px;">提取到 '+candidates.length+' 个候选术语（未在词典中的）：</p><ul class="candidate-list">' +
+        candidates.map((c, i) => '<li data-idx="'+i+'"><span class="cand-abbr">'+c.abbr+'</span><span class="cand-full">'+c.en+'</span><span class="cand-cat">'+(categoryNames[c.section]?categoryNames[c.section].zh:'')+'</span></li>').join('') +
+        '</ul>';
+      document.getElementById('extractActions').style.display = 'flex';
+      termsDiv.querySelectorAll('li').forEach(li => li.addEventListener('click', () => li.classList.toggle('selected')));
+    } else {
+      termsDiv.innerHTML = '<p style="font-size:0.85rem;color:var(--text-secondary);">未发现可新增的术语缩写（已全部在词典中）。</p>';
+    }
+  } else {
+    statusEl.textContent = '未匹配到预置文章（当前仅支持预置链接）';
+    document.getElementById('extractResult').style.display = 'block';
+    document.getElementById('extractTerms').innerHTML = '<p style="font-size:0.85rem;color:var(--text-secondary);">暂不支持实时抓取新链接。请使用「手动添加文章」录入内容。</p>';
+  }
+});
+
+// 添加提取的术语
+document.getElementById('btnAddExtractedTerms').addEventListener('click', () => {
+  const items = document.querySelectorAll('#extractTerms .candidate-list li.selected');
+  if (items.length === 0) { showToast('请先勾选要添加的术语'); return; }
+  let added = 0;
+  items.forEach(li => {
+    const idx = parseInt(li.dataset.idx);
+    const c = currentExtractedTerms[idx];
+    if (!c) return;
+    if (allTerms.some(t => t.abbr === c.abbr)) return;
+    addTermToPage(c.abbr, c.en, c.cn, c.zh_desc, c.en_desc, c.section);
+    added++;
+  });
+  if (added > 0) {
+    showToast('已添加 ' + added + ' 条术语');
+    document.getElementById('extractTerms').innerHTML = '<p style="font-size:0.85rem;color:var(--green);">已添加 '+added+' 条术语到词典。</p>';
+    document.getElementById('extractActions').style.display = 'none';
+  }
+});
+
+// 手动添加文章
+document.getElementById('btnAddManArticle').addEventListener('click', () => {
+  const title = document.getElementById('manArtTitle').value.trim();
+  const url = document.getElementById('manArtUrl').value.trim();
+  const tagsStr = document.getElementById('manArtTags').value.trim();
+  const content = document.getElementById('manArtContent').value.trim();
+  if (!title) { showToast('请填写文章标题'); return; }
+  if (!content) { showToast('请填写正文内容'); return; }
+
+  articleIdCounter++;
+  const tags = tagsStr ? tagsStr.split(/[,，、]/).map(t => t.trim()).filter(t => t) : [];
+  let domain = '手动录入';
+  if (url) { try { domain = (new URL(url)).hostname.replace('www.',''); } catch(e) { domain = url.replace(/^https?:\/\//,'').split('/')[0] || '手动录入'; } }
+  const today = new Date().toISOString().split('T')[0];
+  const summary = content.replace(/[#*`\n]/g,' ').substring(0,150) + '...';
+
+  knowledgeArticles.push({
+    id: articleIdCounter, title: title, url: url, source: domain,
+    date: today, tags: tags, summary: summary, content: content
+  });
+
+  renderArticles();
+  closeModal();
+  document.getElementById('manArtTitle').value = '';
+  document.getElementById('manArtUrl').value = '';
+  document.getElementById('manArtTags').value = '';
+  document.getElementById('manArtContent').value = '';
+  switchTab('articles');
+  showToast('文章已保存');
+});
+
+// ===== 手动添加术语 =====
+document.getElementById('btnManualAdd').addEventListener('click', () => {
+  const abbr = document.getElementById('manAbbr').value.trim();
+  const en = document.getElementById('manEn').value.trim();
+  const cn = document.getElementById('manCn').value.trim();
+  const cat = document.getElementById('manCat').value.trim();
+  const zhDesc = document.getElementById('manZhDesc').value.trim();
+  const enDesc = document.getElementById('manEnDesc').value.trim();
+  if (!abbr) { showToast('请填写缩写'); return; }
+  if (allTerms.some(t => t.abbr === abbr)) { showToast('该缩写已存在'); return; }
+  addTermToPage(abbr, en, cn, zhDesc||'（待补充）', enDesc||'(TBD)', cat||catSections[0]);
+  ['manAbbr','manEn','manCn','manCat','manZhDesc','manEnDesc'].forEach(id => document.getElementById(id).value='');
+  showToast('已添加术语: '+abbr);
+});
+
+function addTermToPage(abbr, enFull, cnName, zhDesc, enDesc, catId) {
+  const sec = document.getElementById(catId);
+  if (!sec) return;
+  const tbody = sec.querySelector('tbody');
+  const row = document.createElement('tr');
+  row.dataset.abbr = abbr;
+  row.dataset.cn = cnName;
+  row.innerHTML = '<td class="col-abbr">'+abbr+'</td>'+(enFull?'<td class="col en-col">'+enFull+'</td>':'<td class="col en-col"></td>')+'<td class="col cn-col">'+cnName+'</td><td class="col-desc"><span data-lang-zh>'+zhDesc+'</span><span data-lang-en>'+enDesc+'</span></td>';
+  row.style.background = '#e8f5e9';
+  tbody.appendChild(row);
+  setTimeout(() => row.style.background='', 2000);
+
+  const catInfo = categoryNames[catId];
+  allTerms.push({abbr:abbr, cn:cnName, en:enFull, section:catId, zh_cat:catInfo?catInfo.zh:'', en_cat:catInfo?catInfo.en:'', label:abbr+' — '+cnName});
+  runningTotal++;
+  updateTermCountDisplay(document.body.className.replace('lang-',''));
+  sec.scrollIntoView({behavior:'smooth',block:'center'});
+}
+
+// ===== Toast =====
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ===== 返回顶部 =====
+const btnTop = document.getElementById('backToTop');
+window.addEventListener('scroll', () => btnTop.classList.toggle('visible', window.scrollY > 400));
+btnTop.addEventListener('click', () => window.scrollTo({top:0,behavior:'smooth'}));
+
+// ===== 初始渲染文章 =====
+try { renderArticles(); } catch(e) { console.error('renderArticles init error:', e); }
+
+// ===== 目录链接在术语Tab内导航 =====
+document.querySelectorAll('.toc-list a[data-nav]').forEach(a => {
+  a.addEventListener('click', (e) => {
+    e.preventDefault();
+    switchTab('terms');
+    const target = document.getElementById(a.dataset.nav.substring(1));
+    if (target) target.scrollIntoView({behavior:'smooth',block:'start'});
+  });
+});
+
+// ===== AI 智能检索 =====
+const AI_CANDIDATE_POOL = [
+  // sec-1 基础电气
+  {abbr:"UPS", cn:"不间断电源", en:"Uninterruptible Power Supply", section:"sec-1", zh_desc:"在市电中断时提供应急备用电源的设备，含蓄电池和逆变模块，广泛用于数据中心、医疗设备、关键控制系统的供电保障。", en_desc:"Device providing emergency backup power during mains failure, containing batteries and inverter modules; widely used for power protection of data centers, medical equipment and critical control systems."},
+  {abbr:"ATS", cn:"双电源自动切换开关", en:"Automatic Transfer Switch", section:"sec-1", zh_desc:"监测主电源状态并在断电时自动切换至备用电源的开关装置，广泛用于配电系统中保障重要负载的不间断供电。", en_desc:"Switch that monitors primary power status and automatically transfers to backup upon failure, used in distribution systems to ensure uninterrupted power to critical loads."},
+  {abbr:"DG", cn:"柴油发电机", en:"Diesel Generator", section:"sec-1", zh_desc:"以柴油为燃料的内燃发电机组，作为光伏/储能微网的备用电源，在长时间离网或市电中断时提供应急电力。", en_desc:"Diesel-fueled generator set serving as backup power source in PV/storage microgrids, providing emergency electricity during prolonged off-grid or grid outage periods."},
+  {abbr:"CHP", cn:"热电联产", en:"Combined Heat and Power", section:"sec-1", zh_desc:"同时生产电力和有用热能的能源利用技术，可与光伏/储能系统集成形成多能互补的智慧能源方案。", en_desc:"Technology that simultaneously generates electricity and useful heat; can integrate with PV/storage to form multi-energy complementary smart energy solutions."},
+  // sec-5 并网系统
+  {abbr:"DER", cn:"分布式能源资源", en:"Distributed Energy Resource", section:"sec-5", zh_desc:"分布在用户侧的发电、储能和需求响应资源的总称，包括屋顶光伏、小型风机、储能系统、电动汽车等，是现代微网的核心构成。", en_desc:"Collective term for generation, storage and demand response resources located at customer side, including rooftop PV, small wind turbines, battery storage and EVs; core building blocks of modern microgrids."},
+  {abbr:"VPP", cn:"虚拟电厂", en:"Virtual Power Plant", section:"sec-5", zh_desc:"通过信息技术将分散的分布式能源资源聚合为一个整体进行协调优化调度，向电网提供调峰、调频等辅助服务。", en_desc:"IT-driven aggregation of distributed energy resources into a coordinated whole for optimized dispatch, providing ancillary services such as peak shaving and frequency regulation to the grid."},
+  {abbr:"DR", cn:"需求响应", en:"Demand Response", section:"sec-5", zh_desc:"电力用户根据价格信号或激励措施主动调整用电模式，减少或转移高峰负荷，提升电网灵活性和可靠性。", en_desc:"Programs where electricity consumers voluntarily adjust usage patterns in response to price signals or incentives, reducing or shifting peak loads to enhance grid flexibility and reliability."},
+  {abbr:"TOU", cn:"分时电价", en:"Time of Use", section:"sec-5", zh_desc:"根据不同时段对用电价格进行差异化定价的机制，引导用户在低谷时段多用电、高峰时段少用电，是储能套利的经济基础。", en_desc:"Pricing mechanism that sets different electricity rates by time period, encouraging users to shift consumption to off-peak hours; forms the economic basis for energy storage arbitrage."},
+  {abbr:"PCC", cn:"公共连接点", en:"Point of Common Coupling", section:"sec-5", zh_desc:"光伏/储能系统与公共电网的电气连接点，是电能质量评估和保护配合的关键参考节点，所有防逆流控制以此点为基准。", en_desc:"The electrical connection point between PV/storage system and public grid; the key reference node for power quality assessment and protection coordination, serving as the benchmark for all anti-reverse-power-flow control."},
+  {abbr:"Microgrid", cn:"微电网", en:"Microgrid", section:"sec-5", zh_desc:"由分布式电源、储能、负荷、保护控制装置构成的小型发配电系统，可并网运行也可离网孤岛运行，是能源互联网的基础单元。", en_desc:"Small-scale generation and distribution system comprising distributed generation, storage, loads and protection/control devices; can operate grid-connected or islanded, serving as the basic building block of energy internet."},
+  // sec-7 安全与安装规范
+  {abbr:"OLTC", cn:"有载调压开关", en:"On-Load Tap Changer", section:"sec-7", zh_desc:"变压器在不中断供电的情况下调节电压比的关键组件，对光伏电站并网点电压稳定控制至关重要。", en_desc:"Key component of transformers that adjusts voltage ratio without interrupting power supply; critical for voltage stability control at PV plant point of interconnection."},
+  {abbr:"SF6", cn:"六氟化硫", en:"Sulfur Hexafluoride", section:"sec-7", zh_desc:"一种高绝缘强度的温室气体，广泛用于高压开关设备（GIS）和断路器的灭弧与绝缘介质。", en_desc:"Greenhouse gas with high dielectric strength, widely used as arc-quenching and insulating medium in high-voltage switchgear (GIS) and circuit breakers."},
+  {abbr:"XLPE", cn:"交联聚乙烯", en:"Cross-linked Polyethylene", section:"sec-7", zh_desc:"经交联工艺改性的聚乙烯绝缘材料，具有优异的热稳定性和电气性能，是电力电缆的主流绝缘材料。", en_desc:"Cross-linked polyethylene insulation material with excellent thermal stability and electrical performance; the mainstream insulation material for power cables."},
+  {abbr:"Earthing Grid", cn:"接地网", en:"Earthing Grid", section:"sec-7", zh_desc:"埋设在地下的金属导体网络，用于将故障电流安全导入大地、均衡地表电位，是电站防雷和人身安全的基础设施。", en_desc:"Buried metallic conductor network that safely dissipates fault current into earth and equalizes surface potential; fundamental infrastructure for lightning protection and personnel safety at power plants."},
+  {abbr:"TT System", cn:"TT接地系统", en:"TT Earthing System", section:"sec-7", zh_desc:"电源侧和用户侧分别独立接地的低压配电系统，各设备外壳通过保护接地极直接接地，不依赖供电线路的PE线。", en_desc:"Low-voltage distribution system where source and consumer sides are independently earthed; equipment enclosures grounded directly via local earth electrode, not relying on supply PE conductor."},
+  {abbr:"TN System", cn:"TN接地系统", en:"TN Earthing System", section:"sec-7", zh_desc:"电源侧直接接地、用户侧通过保护导体（PE）与电源接地点连接的配电系统，按N与PE的组合分为TN-S、TN-C、TN-C-S三种型式。", en_desc:"Distribution system where source is directly earthed and consumer connects via PE conductor to source earth point; classified as TN-S, TN-C, or TN-C-S based on N and PE arrangement."},
+  {abbr:"IT System", cn:"IT不接地系统", en:"IT Earthing System", section:"sec-7", zh_desc:"电源侧不直接接地或经高阻抗接地、设备外壳接地的配电系统，首次接地故障不引起跳闸，适合对供电连续性要求高的场所。", en_desc:"Distribution system where source is unearthed or high-impedance earthed and equipment enclosures are grounded; first earth fault does not trip, suitable for locations requiring high service continuity."},
+  {abbr:"EMC", cn:"电磁兼容性", en:"Electromagnetic Compatibility", section:"sec-7", zh_desc:"设备或系统在其电磁环境中正常工作且不对该环境中其他设备产生不可接受的电磁干扰的能力。", en_desc:"Ability of equipment or systems to function satisfactorily in their electromagnetic environment without introducing intolerable electromagnetic disturbance to other equipment in that environment."},
+  {abbr:"EMI", cn:"电磁干扰", en:"Electromagnetic Interference", section:"sec-7", zh_desc:"电磁骚扰导致电子设备性能下降的效应，光伏逆变器的高频开关可能产生EMI，需通过滤波器、屏蔽等措施加以抑制。", en_desc:"Degradation of electronic equipment performance caused by electromagnetic disturbance; PV inverter high-frequency switching can generate EMI requiring suppression via filters, shielding and other measures."},
+  {abbr:"FAT", cn:"工厂验收测试", en:"Factory Acceptance Test", section:"sec-7", zh_desc:"设备出厂前在制造工厂进行的全面功能与性能测试，验证设备满足合同技术规范要求后方可发货。", en_desc:"Comprehensive functional and performance testing conducted at manufacturer's facility before shipment, verifying that equipment meets contractual technical specifications prior to delivery."},
+  {abbr:"SAT", cn:"现场验收测试", en:"Site Acceptance Test", section:"sec-7", zh_desc:"设备运抵现场安装完毕后进行的验证测试，确认运输和安装过程未造成设备损坏、系统功能满足设计要求。", en_desc:"Verification testing conducted after equipment installation at site, confirming no transportation/installation damage and that system functions meet design requirements."},
+  {abbr:"Cx", cn:"调试与试运行", en:"Commissioning", section:"sec-7", zh_desc:"系统安装完成后对其进行功能验证、性能调优和合规确认的系统化过程，是项目从建设转入运营的关键阶段。", en_desc:"Systematic process of functional verification, performance tuning and compliance confirmation after system installation; the critical project phase transitioning from construction to operation."},
+  {abbr:"As-Built", cn:"竣工图/竣工文件", en:"As-Built Documentation", section:"sec-7", zh_desc:"反映工程实际施工结果（含变更）的最终图纸和技术文件，是项目移交和后续运维的法定依据。", en_desc:"Final drawings and technical documents reflecting actual construction results including changes; legal basis for project handover and subsequent O&M."},
+  {abbr:"RFI", cn:"信息征询函", en:"Request for Information", section:"sec-7", zh_desc:"工程建设中承包商向业主、设计方或供应商提出的技术澄清或信息请求文件，用于解决图纸矛盾、产品替代等具体问题。", en_desc:"Formal document used by contractors to seek technical clarification or information from clients, designers or suppliers during construction, resolving issues like drawing conflicts and product substitutions."},
+  {abbr:"NCR", cn:"不合格项报告", en:"Non-Conformance Report", section:"sec-7", zh_desc:"记录施工或制造过程中不符合技术规范、图纸或质量标准的事项及其纠正措施的正式文件。", en_desc:"Formal document recording instances where construction or manufacturing fails to meet technical specifications, drawings or quality standards, along with corrective actions."},
+  {abbr:"HSE", cn:"健康安全环境", en:"Health Safety Environment", section:"sec-7", zh_desc:"工程项目中关于人员健康、作业安全与环境保护的管理体系，涵盖风险评估、培训、应急预案和合规监督。", en_desc:"Management system covering personnel health, occupational safety and environmental protection in engineering projects, encompassing risk assessment, training, emergency planning and compliance supervision."},
+  {abbr:"JSA", cn:"作业安全分析", en:"Job Safety Analysis", section:"sec-7", zh_desc:"对特定作业任务进行分步骤风险识别、评估并制定控制措施的前置安全分析方法，是工作许可制度的重要组成。", en_desc:"Pre-task hazard identification method that breaks down job steps, assesses risks and develops control measures; an integral part of permit-to-work systems."},
+  {abbr:"E-stop", cn:"紧急停止按钮", en:"Emergency Stop", section:"sec-7", zh_desc:"在紧急情况下立即切断设备电源或停止危险运动的红色蘑菇头按钮，是电气安全的基础保护装置。", en_desc:"Red mushroom-head pushbutton that immediately cuts equipment power or stops hazardous motion in emergencies; a fundamental electrical safety device."},
+  // sec-9 监控
+  {abbr:"GPRS", cn:"通用分组无线服务", en:"General Packet Radio Service", section:"sec-9", zh_desc:"基于GSM的无线分组数据通信技术，常用于分布式光伏电站的数据远程采集与传输。", en_desc:"GSM-based wireless packet data communication technology, commonly used for remote data acquisition and transmission in distributed PV plants."},
+  {abbr:"RTU", cn:"远程终端单元", en:"Remote Terminal Unit", section:"sec-9", zh_desc:"安装在远程现场进行数据采集、设备控制并与主站通信的电子装置，广泛用于变电站和大型光伏电站的自动化监控。", en_desc:"Electronic device installed at remote sites for data acquisition, equipment control and communication with master station; widely used in substation and large PV plant automation."},
+  {abbr:"IED", cn:"智能电子设备", en:"Intelligent Electronic Device", section:"sec-9", zh_desc:"集成了微处理器的电力系统装置，具有保护、控制、监测和通信功能，如智能继电保护装置和多功能仪表。", en_desc:"Microprocessor-based power system device with protection, control, monitoring and communication capabilities, such as intelligent protection relays and multi-function meters."},
+  {abbr:"GOOSE", cn:"通用面向对象的变电站事件", en:"Generic Object Oriented Substation Event", section:"sec-9", zh_desc:"IEC 61850标准中定义的高速对等通信机制，用于变电站内IED之间快速交换跳闸、联锁等实时信号。", en_desc:"High-speed peer-to-peer communication mechanism defined in IEC 61850 for rapid exchange of tripping, interlocking and other real-time signals among IEDs within substations."},
+  {abbr:"SMU", cn:"智能量测单元", en:"Smart Metering Unit", section:"sec-9", zh_desc:"集测量、通信和控制于一体的新一代电表或电力测量终端，支持双向计量、远程抄表和负荷管理。", en_desc:"New-generation meter or power measurement terminal integrating metering, communication and control, supporting bidirectional measurement, remote reading and load management."},
+  {abbr:"HMI", cn:"人机界面", en:"Human Machine Interface", section:"sec-9", zh_desc:"操作人员与控制系统交互的图形化界面设备，用于监视系统运行状态、接收告警和下发控制指令。", en_desc:"Graphical interface device enabling operators to interact with control systems, used for monitoring system status, receiving alarms and issuing control commands."},
+  // sec-10 标准认证
+  {abbr:"NEC 690", cn:"NEC 690光伏系统标准", en:"NEC Article 690 — Solar Photovoltaic Systems", section:"sec-10", zh_desc:"美国国家电气规范中专门针对光伏系统的章节，涵盖组件、逆变器、线缆、接地和快速关断的完整安装与安全要求。", en_desc:"NFPA National Electrical Code article dedicated to PV systems, covering complete installation and safety requirements for modules, inverters, wiring, grounding and rapid shutdown."},
+  {abbr:"NEC 705", cn:"NEC 705互联发电系统标准", en:"NEC Article 705 — Interconnected Electric Power Production Sources", section:"sec-10", zh_desc:"美国国家电气规范中规定分布式发电系统与电网互联的技术要求，包括并网保护、反孤岛和潮流控制。", en_desc:"NFPA National Electrical Code article specifying technical requirements for interconnecting distributed generation with the grid, including grid protection, anti-islanding and power flow control."},
+  {abbr:"IEEE 1547", cn:"IEEE 1547互联标准", en:"IEEE 1547 — Interconnection and Interoperability of DER", section:"sec-10", zh_desc:"IEEE发布的核心分布式能源互联标准，定义了分布式能源与电网的互联技术要求和测试程序，支持电网支撑功能。", en_desc:"IEEE's core standard for distributed energy resource interconnection, defining technical requirements and test procedures for DER-grid interconnection with grid support functionality."},
+  {abbr:"IEC 62446", cn:"IEC 62446光伏系统标准", en:"IEC 62446 — PV System Documentation & Commissioning", section:"sec-10", zh_desc:"IEC发布的并网光伏系统文档、调试和检验标准，规定了光伏系统从安装到交付的完整验证流程。", en_desc:"IEC standard for grid-connected PV system documentation, commissioning and inspection, specifying the complete verification process from installation to handover."},
+  {abbr:"ISO 9001", cn:"ISO 9001质量管理体系", en:"ISO 9001 — Quality Management Systems", section:"sec-10", zh_desc:"国际标准化组织发布的质量管理体系标准，为光伏组件制造、电站建设和运维服务提供流程化的质量保障框架。", en_desc:"International quality management system standard by ISO, providing process-oriented quality assurance frameworks for PV module manufacturing, plant construction and O&M services."},
+];
+
+function openAiPanel() {
+  const overlay = document.getElementById('aiOverlay');
+  overlay.classList.add('open');
+  // Reset state
+  document.getElementById('aiScanning').style.display = 'block';
+  document.getElementById('aiResults').style.display = 'none';
+  document.getElementById('aiProgressFill').style.width = '0%';
+  document.getElementById('aiScanText').innerHTML = '正在初始化检索引擎<span class="typing-cursor"></span>';
+  document.getElementById('btnAiAddTerms').disabled = true;
+  document.getElementById('aiTermsList').innerHTML = '';
+}
+
+function closeAiPanel() {
+  document.getElementById('aiOverlay').classList.remove('open');
+}
+
+// AI Scanning animation
+const AI_SCAN_STEPS = [
+  {text:'正在初始化检索引擎', progress:10, delay:400},
+  {text:'正在分析现有术语库结构', progress:25, delay:500},
+  {text:'正在检索电气光伏领域新术语', progress:50, delay:600},
+  {text:'正在匹配术语分类与释义', progress:75, delay:500},
+  {text:'正在过滤已存在术语并生成候选列表', progress:90, delay:500},
+  {text:'检索完成，共发现候选术语', progress:100, delay:300},
+];
+
+function runAiScan() {
+  let i = 0;
+  const progressEl = document.getElementById('aiProgressFill');
+  const textEl = document.getElementById('aiScanText');
+
+  function nextStep() {
+    if (i < AI_SCAN_STEPS.length) {
+      const step = AI_SCAN_STEPS[i];
+      progressEl.style.width = step.progress + '%';
+      textEl.innerHTML = step.text + '<span class="typing-cursor"></span>';
+      i++;
+      setTimeout(nextStep, step.delay);
+    } else {
+      showAiResults();
+    }
+  }
+  nextStep();
+}
+
+function showAiResults() {
+  document.getElementById('aiScanning').style.display = 'none';
+  document.getElementById('aiResults').style.display = 'block';
+
+  // Filter candidates not already in allTerms
+  const existingAbbrs = new Set(allTerms.map(t => t.abbr.toUpperCase()));
+  const candidates = AI_CANDIDATE_POOL.filter(c => !existingAbbrs.has(c.abbr.toUpperCase()));
+
+  // Update info
+  const lang = (document.body.className.match(/lang-(\w+)/)||['','both'])[1];
+  document.getElementById('aiResultsInfo').innerHTML = (lang === 'en'
+    ? 'Found <strong>' + candidates.length + '</strong> candidate terms'
+    : '共检索到 <strong>' + candidates.length + '</strong> 个候选术语');
+
+  if (candidates.length === 0) {
+    document.getElementById('aiTermsList').innerHTML = '<div class="ai-no-results">' +
+      (lang === 'en' ? 'All candidate terms are already in your dictionary. Your knowledge base is comprehensive!' : '所有候选术语已全部在词典中，您的知识库已经非常全面！') +
+      '</div>';
+    document.getElementById('btnAiSelectAll').style.display = 'none';
+    document.getElementById('btnAiAddTerms').style.display = 'none';
+    return;
+  }
+
+  document.getElementById('btnAiSelectAll').style.display = '';
+  document.getElementById('btnAiAddTerms').style.display = '';
+
+  // Render term cards
+  const langKey = (lang === 'en') ? 'en' : 'zh';
+  const catName = (catId) => {
+    const info = categoryNames[catId];
+    return info ? (info[langKey] || info.zh) : catId;
+  };
+
+  document.getElementById('aiTermsList').innerHTML = candidates.map((c, idx) => {
+    return '<div class="ai-term-card" data-ai-idx="' + idx + '" data-abbr="' + c.abbr + '" data-cn="' + c.cn + '" data-en="' + c.en + '" data-section="' + c.section + '" data-zh-desc="' + c.zh_desc.replace(/"/g, '&quot;') + '" data-en-desc="' + c.en_desc.replace(/"/g, '&quot;') + '">' +
+      '<div class="ai-checkbox"></div>' +
+      '<div class="ai-term-info">' +
+        '<div class="ai-term-abbr">' + c.abbr + '</div>' +
+        '<div class="ai-term-name">' + (lang === 'en' ? c.en : c.cn) + '</div>' +
+      '</div>' +
+      '<div class="ai-term-cat">' + catName(c.section) + '</div>' +
+    '</div>';
+  }).join('');
+
+  // Click to toggle selection
+  document.querySelectorAll('#aiTermsList .ai-term-card').forEach(card => {
+    card.addEventListener('click', () => {
+      card.classList.toggle('selected');
+      updateAiAddButton();
+    });
+  });
+
+  updateAiAddButton();
+}
+
+function updateAiAddButton() {
+  const selCount = document.querySelectorAll('#aiTermsList .ai-term-card.selected').length;
+  const btn = document.getElementById('btnAiAddTerms');
+  btn.disabled = selCount === 0;
+}
+
+// Select all / deselect all
+let aiAllSelected = false;
+(function() {
+  var el = document.getElementById('btnAiSelectAll');
+  if (!el) return;
+  el.addEventListener('click', function() {
+  aiAllSelected = !aiAllSelected;
+  const cards = document.querySelectorAll('#aiTermsList .ai-term-card');
+  cards.forEach(c => { if (aiAllSelected) c.classList.add('selected'); else c.classList.remove('selected'); });
+  const lang = (document.body.className.match(/lang-(\w+)/)||['','both'])[1];
+  this.innerHTML = aiAllSelected
+    ? (lang === 'en' ? 'Deselect All' : '取消全选')
+    : (lang === 'en' ? 'Select All' : '全选');
+  updateAiAddButton();
+  });
+})();
+
+// Batch add selected terms
+(function() {
+  var el = document.getElementById('btnAiAddTerms');
+  if (!el) return;
+  el.addEventListener('click', function() {
+  const selectedCards = document.querySelectorAll('#aiTermsList .ai-term-card.selected');
+  if (selectedCards.length === 0) return;
+
+  let added = 0;
+  selectedCards.forEach(card => {
+    const abbr = card.dataset.abbr;
+    const en = card.dataset.en;
+    const cn = card.dataset.cn;
+    const section = card.dataset.section;
+    const zhDesc = card.dataset.zhDesc;
+    const enDesc = card.dataset.enDesc;
+
+    if (allTerms.some(t => t.abbr === abbr)) return;
+
+    addTermToPage(abbr, en, cn, zhDesc, enDesc, section);
+    added++;
+  });
+
+  if (added > 0) {
+    showToast('已添加 ' + added + ' 条术语到知识库');
+    // Remove added items from list
+    selectedCards.forEach(c => c.remove());
+    // Update count
+    const remaining = document.querySelectorAll('#aiTermsList .ai-term-card').length;
+    const lang = (document.body.className.match(/lang-(\w+)/)||['','both'])[1];
+    document.getElementById('aiResultsInfo').innerHTML = (lang === 'en'
+      ? '<strong>' + remaining + '</strong> candidate terms remaining'
+      : '剩余 <strong>' + remaining + '</strong> 个候选术语');
+    if (remaining === 0) {
+      document.getElementById('aiTermsList').innerHTML = '<div class="ai-no-results">' +
+        (lang === 'en' ? 'All candidates have been added!' : '所有候选术语已全部添加完毕！') +
+        '</div>';
+      document.getElementById('btnAiSelectAll').style.display = 'none';
+      document.getElementById('btnAiAddTerms').disabled = true;
+    }
+    updateAiAddButton();
+    aiAllSelected = false;
+    document.getElementById('btnAiSelectAll').innerHTML = (lang === 'en' ? 'Select All' : '全选');
+  }
+  });
+})();
+
+// Bind AI button
+(function() {
+  var el = document.getElementById('btnAiSearch');
+  if (el) {
+    el.addEventListener('click', function() {
+      openAiPanel();
+      setTimeout(runAiScan, 300);
+    });
+  }
+})();
+
+// Bind AI panel close
+(function() {
+  var closeEl = document.getElementById('aiClose');
+  if (closeEl) closeEl.addEventListener('click', closeAiPanel);
+  var overlayEl = document.getElementById('aiOverlay');
+  if (overlayEl) {
+    overlayEl.addEventListener('click', function(e) {
+      if (e.target === overlayEl) closeAiPanel();
+    });
+  }
+})();
+
+// ESC to close
+document.addEventListener('keydown', function(e) {
+  var overlay = document.getElementById('aiOverlay');
+  if (overlay && e.key === 'Escape' && overlay.classList.contains('open')) {
+    closeAiPanel();
+  }
+});
+
+</script>
+</body>
+</html>
