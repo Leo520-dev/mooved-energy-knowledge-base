@@ -535,7 +535,7 @@ tbody tr.highlight { animation:highlightFlash 2s ease-out; background:#fff3e0 !i
       </button>
     </div>
     <div class="btn-ai-wrap">
-      <button class="btn-ai" id="btnAiSearch" title="AI 智能检索">
+      <button class="btn-ai" id="btnAiSearch" title="AI 智能检索" onclick="openAiPanel();setTimeout(runAiScan,300)">
         <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
         <span data-lang-zh>AI 检索</span><span data-lang-en>AI Search</span>
       </button>
@@ -1650,16 +1650,13 @@ let aiAllSelected = false;
   });
 })();
 
-// Bind AI button
-(function() {
+// Bind AI button (inline onclick as primary, JS listener as fallback)
+document.addEventListener('DOMContentLoaded', function() {
   var el = document.getElementById('btnAiSearch');
-  if (el) {
-    el.addEventListener('click', function() {
-      openAiPanel();
-      setTimeout(runAiScan, 300);
-    });
+  if (el && !el.hasAttribute('data-bound')) {
+    el.setAttribute('data-bound', '1');
   }
-})();
+});
 
 // Bind AI panel close
 (function() {
